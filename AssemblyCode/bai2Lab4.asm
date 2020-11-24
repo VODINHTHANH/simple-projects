@@ -1,8 +1,39 @@
 .data
-array: .word 5, 9, 7
+array: .word 9, 0, -5, 700, 20 
+xuongH: .asciiz "\n"
 .text
-addi $a1, $zero, 3 #size of array
+#print array
+    li      $v0, 0
+    la      $t1, array
+loop1:
+    bge     $t0, 5, exit
+
+    # load word from addrs and goes to the next addrs
+    lw      $t2, 0($t1)
+    addi    $t1, $t1, 4
+
+    # syscall to print value
+    li      $v0, 1      
+    move    $a0, $t2
+    syscall
+    # optional - syscall number for printing character (space)
+    li      $a0, 32
+    li      $v0, 11  
+    syscall
+
+
+    #increment counter
+    addi    $t0, $t0, 1
+    j      loop1
+exit:
+la $a0, xuongH
+li $v0, 4
+syscall
+##############
+la $a0, array
+addi $a1, $zero, 5 #size of array
 jal range
+
 move $a0, $v0 #print range of array
 li $v0, 1
 syscall

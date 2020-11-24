@@ -1,13 +1,17 @@
 .data
 .align 1
 String: .asciiz "Computer Architecture 2020" 
-msg1: .asciiz "Pls give a character: "
-msg2: .asciiz "\n"
-msg3: .asciiz "String is: "
+msg3: .asciiz "\nString is: "
 msg4: .asciiz "\nString Reversed is: "
 .text
 .globl main
 main:
+la $a0,msg3
+li $v0, 4
+syscall
+la $a0,String
+li $v0, 4
+syscall
 
 la $a0,String #a0 = parameter for fc
 addi $a1,$zero, 26#pass length-*change parameter a1 = size = 14
@@ -26,14 +30,11 @@ syscall #end program
 
 
 stringreverse:
-
 add $t0,$a0,$zero #beginning address
-
 add $t1,$zero,$zero  #i=0
 addi $t2,$a1,-1   #j=length-1
 
 loop:
-
 add $t3,$t0,$t1
 lb $t4,0($t3) #lb String[i]
 
