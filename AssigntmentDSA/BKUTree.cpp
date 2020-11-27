@@ -36,16 +36,22 @@ public:
     void add(K key, V value)
     {
         Entry *newEntry = new Entry(key, value);
-        typename AVLTree::Node *point = AVLTree::add(newEntry);
-        typename AVLTree::Node *point1 = SplayTree::add(newEntry);
+        typename AVLTree::Node *point = avl->AVLTree::add(newEntry);
+        typename SplayTree::Node *point1 = splay->SplayTree::add(newEntry);
         point->corr = point1;
         point1->corr = point;
     }
     void remove(K key);
     V search(K key, vector<K> &traversedList);
 
-    void traverseNLROnAVL(void (*func)(K key, V value));
-    void traverseNLROnSplay(void (*func)(K key, V value));
+    void traverseNLROnAVL(void (*func)(K key, V value))
+    {
+        avl->traverseNLR(func);
+    }
+    void traverseNLROnSplay(void (*func)(K key, V value))
+    {
+        splay->traverseNLR(func);
+    }
 
     void clear();
 
@@ -54,6 +60,7 @@ public:
     public:
         class Node
         {
+        public:
             Entry *entry;
             Node *left;
             Node *right;
@@ -73,136 +80,25 @@ public:
 
         SplayTree() : root(NULL){};
         ~SplayTree() { this->clear(); };
-        Node *rightRotate(Node *&x)
-        {
-            Node *y = x->left;
-            x->left = y->right;
-            y->right = x;
-            return y;
-        }
 
-        Node *leftRotate(Node *&x)
-        {
-            Node *y = x->right;
-            x->right = y->left;
-            y->left = x;
-            return y;
-        }
-        Node *splay(Node *&r, int key)
-        {
-            // Base cases: root is NULL or
-            // key is present at root
-            if (r == NULL || r->entry->key == key)
-                return r;
-
-            // Key lies in left subtree
-            if (r->entry->key > key)
-            {
-                // Key is not in tree, we are done
-                if (r->left == NULL)
-                    return r;
-
-                // Zig-Zig (Left Left)
-                if (r->left->key > key)
-                {
-                    // First recursively bring the
-                    // key as root of left-left
-                    r->left->left = splay(r->left->left, key);
-
-                    // Do first rotation for root,
-                    // second rotation is done after else
-                    r = rightRotate(r);
-                }
-                else if (r->left->key < key) // Zig-Zag (Left Right)
-                {
-                    // First recursively bring
-                    // the key as root of left-right
-                    r->left->right = splay(r->left->right, key);
-
-                    // Do first rotation for root->left
-                    if (r->left->right != NULL)
-                        r->left = leftRotate(r->left);
-                }
-
-                // Do second rotation for root
-                return (r->left == NULL) ? r : rightRotate(r);
-            }
-            else // Key lies in right subtree
-            {
-                // Key is not in tree, we are done
-                if (r->right == NULL)
-                    return r;
-
-                // Zig-Zag (Right Left)
-                if (r->right->key > key)
-                {
-                    // Bring the key as root of right-left
-                    r->right->left = splay(r->right->left, key);
-
-                    // Do first rotation for r->right
-                    if (r->right->left != NULL)
-                        r->right = rightRotate(r->right);
-                }
-                else if (r->right->key < key) // Zag-Zag (Right Right)
-                {
-                    // Bring the key as r of
-                    // right-right and do first rotation
-                    r->right->right = splay(r->right->right, key);
-                    r = leftRotate(r);
-                }
-
-                // Do second rotation for r
-                return (r->right == NULL) ? r : leftRotate(r);
-            }
-        }
-        Node *insert(Node *&r, Node *newNode)
-        {
-
-            r = splay(r, newNode);
-
-            // If key is already present, then return
-            if (r->entry->key == newNode->entry->key)
-                return r;
-
-            // Otherwise allocate memory for new Node
-
-            // If r's key is greater, make
-            // r as right child of newNode
-            // and copy the left child of r to newNode
-            if (r->entry->key > newNode->entry->key)
-            {
-                newNode->right = r;
-                newNode->left = r->left;
-                r->left = NULL;
-            }
-
-            // If r's key is smaller, make
-            // r as left child of newNode
-            // and copy the right child of r to newNode
-            else
-            {
-                newNode->left = r;
-                newNode->right = r->right;
-                r->right = NULL;
-            }
-
-            return newNode; // newNode becomes new root
-        }
         void add(K key, V value);
+
         Node *add(Entry *entry)
         {
-            Node *newNode = new Node(entry, NULL, NULL); //create new Node with entry
             if (root == NULL)
             {
-                root = newNode;
+                root = new Node(entry, NULL, NULL);
                 return root;
             }
-            insert(root, newNode);
+            return root;
         }
         void remove(K key);
         V search(K key);
 
-        void traverseNLR(void (*func)(K key, V value));
+        void traverseNLR(void (*func)(K key, V value))
+        {
+            func(root->entry->key, root->entry->value);
+        }
 
         void clear();
     };
@@ -212,6 +108,7 @@ public:
     public:
         class Node
         {
+        public:
             Entry *entry;
             Node *left;
             Node *right;
@@ -357,13 +254,16 @@ public:
                 root->balance = 0;
                 return root;
             }
-            insertRec(root, newNode);
+            return insertRec(root, newNode);
         }
 
         void remove(K key);
         V search(K key);
 
-        void traverseNLR(void (*func)(K key, V value));
+        void traverseNLR(void (*func)(K key, V value))
+        {
+            func(root->entry->key, root->entry->value);
+        }
 
         void clear();
     };
