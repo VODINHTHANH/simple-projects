@@ -83,21 +83,157 @@ public:
 
         void add(K key, V value);
 
-        Node *add(Entry *entry)
+        Node *rightRotate(Node *x)
         {
-            if (root == NULL)
+            Node *y = x->left;
+            x->left = y->right;
+            y->right = x;
+            return y;
+        }
+
+        // A utility function to left
+        // rotate subtree rooted with x
+        // See the diagram given above.
+        Node *leftRotate(Node *x)
+        {
+            Node *y = x->right;
+            x->right = y->left;
+            y->left = x;
+            return y;
+        }
+        Node *splay(Node *&r, Entry *&entry)
+        {
+            // Base cases: r is NULL or
+            // key is present at r
+            if (r == NULL || r->entry->key == entry->key)
+                return r;
+
+            // Key lies in left subtree
+            if (r->entry->key > entry->key)
             {
-                root = new Node(entry, NULL, NULL);
-                return root;
+                // Key is not in tree, we are done
+                if (r->left == NULL)
+                    return r;
+
+                // Zig-Zig (Left Left)
+                if (r->left->entry->key > entry->key)
+                {
+                    // First recursively bring the
+                    // key as r of left-left
+                    r->left->left = splay(r->left->left, entry);
+
+                    // Do first rotation for r,
+                    // second rotation is done after else
+                    r = rightRotate(r);
+                }
+                else if (r->left->entry->key < entry->key) // Zig-Zag (Left Right)
+                {
+                    // First recursively bring
+                    // the key as r of left-right
+                    r->left->right = splay(r->left->right, entry);
+
+                    // Do first rotation for r->left
+                    if (r->left->right != NULL)
+                        r->left = leftRotate(r->left);
+                }
+
+                // Do second rotation for r
+                return (r->left == NULL) ? r : rightRotate(r);
             }
-            return root;
+            else // Key lies in right subtree
+            {
+                // Key is not in tree, we are done
+                if (r->right == NULL)
+                    return r;
+
+                // Zig-Zag (Right Left)
+                if (r->right->entry->key > entry->key)
+                {
+                    // Bring the key as r of right-left
+                    r->right->left = splay(r->right->left, entry);
+
+                    // Do first rotation for r->right
+                    if (r->right->left != NULL)
+                        r->right = rightRotate(r->right);
+                }
+                else if (r->right->entry->key < entry->key) // Zag-Zag (Right Right)
+                {
+                    // Bring the key as r of
+                    // right-right and do first rotation
+                    r->right->right = splay(r->right->right, entry);
+                    r = leftRotate(r);
+                }
+
+                // Do second rotation for r
+                return (r->right == NULL) ? r : leftRotate(r);
+            }
+        }
+        Node *insert(Node *&r, Entry *&entry)
+        {
+            // Simple Case: If tree is empty
+            if (r == NULL)
+            {
+                if (r == NULL)
+                {
+                    Node *r = new Node(entry, NULL, NULL); //create new Node with entry
+                    return r;
+                }
+            }
+            // Bring the closest leaf Node to root
+            r = splay(r, entry);
+
+            // If key is already present, then return
+            if (r->entry->key == entry->key)
+                return r;
+
+            // Otherwise allocate memory for new Node
+            Node *newNode = new Node(entry, NULL, NULL);
+
+            // If root's key is greater, make
+            // root as right child of newNode
+            // and copy the left child of root to newNode
+            if (r->entry->key > entry->key)
+            {
+                newNode->right = r;
+                newNode->left = r->left;
+                r->left = NULL;
+            }
+
+            // If root's key is smaller, make
+            // root as left child of newNode
+            // and copy the right child of root to newNode
+            else
+            {
+                newNode->left = r;
+                newNode->right = r->right;
+                r->right = NULL;
+            }
+
+            return newNode; // newNode becomes new root
+        }
+        Node *add(Entry *&entry)
+        {
+            Node *r = root;
+            return insert(r, entry);
         }
         void remove(K key);
         V search(K key);
 
         void traverseNLR(void (*func)(K key, V value))
         {
-            func(root->entry->key, root->entry->value);
+            Node *r = root;
+            if (r == NULL)
+                return;
+
+            /* first print data of node */
+            func(r->entry->key, r->entry->value);
+            /* then recur on left sutree */
+            r = r->left;
+            traverseNLR(func);
+
+            /* now recur on right subtree */
+            r = r->right;
+            traverseNLR(func);
         }
 
         void clear();
@@ -217,13 +353,18 @@ public:
 
             return tp2;
         }
-        Node *insertRec(Node *&r, Node *&newNode)
+        Node *insertRec(Node *&r, Entry *&entry)
         {
-
-            if (newNode->entry->key < r->entry->key)
-                r->left = insertRec(r->left, newNode);
+            if (r == NULL)
+            {
+                Node *r = new Node(entry, NULL, NULL); //create new Node with entry
+                r->balance = 0;
+                return r;
+            }
+            if (entry->key < r->entry->key)
+                r->left = insertRec(r->left, entry);
             else
-                r->right = insertRec(r->right, newNode);
+                r->right = insertRec(r->right, entry);
 
             if (bf(r) == 2 && bf(r->left) == 1)
             {
@@ -244,18 +385,12 @@ public:
 
             return r;
         }
+
         void add(K key, V value);
-        Node *add(Entry *entry)
+        Node *add(Entry *&entry)
         {
-            Node *newNode = new Node(entry, NULL, NULL); //create new Node with entry
-            if (root == NULL)
-            {
-                root = newNode;
-                root->balance = 0;
-                return root;
-            }
             Node *r = root;
-            return insertRec(r, newNode);
+            return insertRec(r, entry);
         }
 
         void remove(K key);
@@ -263,7 +398,19 @@ public:
 
         void traverseNLR(void (*func)(K key, V value))
         {
-            func(root->entry->key, root->entry->value);
+            Node *r = root;
+            if (r == NULL)
+                return;
+
+            /* first print data of node */
+            func(r->entry->key, r->entry->value);
+            /* then recur on left sutree */
+            r = r->left;
+            traverseNLR(func);
+
+            /* now recur on right subtree */
+            r = r->right;
+            traverseNLR(func);
         }
 
         void clear();
