@@ -254,7 +254,8 @@ public:
                 root->balance = 0;
                 return root;
             }
-            return insertRec(root, newNode);
+            Node *r = root;
+            return insertRec(r, newNode);
         }
 
         void remove(K key);
