@@ -82,6 +82,10 @@ public:
         ~SplayTree() { this->clear(); };
 
         void add(K key, V value);
+        Node *insert(Node *&r, Entry *&entry)
+        {
+            return NULL;
+        }
         Node *add(Entry *&entry)
         {
             if (root == NULL)
@@ -89,7 +93,7 @@ public:
                 root = new Node(entry);
                 return root;
             }
-            return insertRec(root, entry);
+            return insert(root, entry);
         }
         void remove(K key);
         V search(K key);
