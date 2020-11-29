@@ -64,6 +64,7 @@ public:
             Entry *entry;
             Node *left;
             Node *right;
+            Node *parent;
             typename AVLTree::Node *corr;
 
             Node(Entry *entry = NULL, Node *left = NULL, Node *right = NULL)
@@ -80,20 +81,132 @@ public:
 
         SplayTree() : root(NULL){};
         ~SplayTree() { this->clear(); };
-
-        void add(K key, V value);
-        Node *insert(Node *&r, Entry *&entry)
+        void left_rotate(Node *x)
         {
-            return NULL;
+            Node *y = x->right;
+            x->right = y->left;
+            if (y->left != NULL)
+            {
+                y->left->parent = x;
+            }
+            y->parent = x->parent;
+            if (x->parent == NULL)
+            { //x is root
+                root = y;
+            }
+            else if (x == x->parent->left)
+            { //x is left child
+                x->parent->left = y;
+            }
+            else
+            { //x is right child
+                x->parent->right = y;
+            }
+            y->left = x;
+            x->parent = y;
         }
+
+        void right_rotate(Node *x)
+        {
+            Node *y = x->left;
+            x->left = y->right;
+            if (y->right != NULL)
+            {
+                y->right->parent = x;
+            }
+            y->parent = x->parent;
+            if (x->parent == NULL)
+            { //x is root
+                root = y;
+            }
+            else if (x == x->parent->right)
+            { //x is left child
+                x->parent->right = y;
+            }
+            else
+            { //x is right child
+                x->parent->left = y;
+            }
+            y->right = x;
+            x->parent = y;
+        }
+        void splay(Node *n)
+        {
+            while (n->parent != NULL)
+            { //node is not root
+                if (n->parent == root)
+                { //node is child of root, one rotation
+                    if (n == n->parent->left)
+                    {
+                        right_rotate(n->parent);
+                    }
+                    else
+                    {
+                        left_rotate(n->parent);
+                    }
+                }
+                else
+                {
+                    Node *p = n->parent;
+                    Node *g = p->parent; //grandparent
+
+                    if (n->parent->left == n && p->parent->left == p)
+                    { //both are left children
+                        right_rotate(g);
+                        right_rotate(p);
+                    }
+                    else if (n->parent->right == n && p->parent->right == p)
+                    { //both are right children
+                        left_rotate(g);
+                        left_rotate(p);
+                    }
+                    else if (n->parent->right == n && p->parent->left == p)
+                    {
+                        left_rotate(p);
+                        right_rotate(g);
+                    }
+                    else if (n->parent->left == n && p->parent->right == p)
+                    {
+                        right_rotate(p);
+                        left_rotate(g);
+                    }
+                }
+            }
+        }
+        void insert(Node *n)
+        {
+            Node *y = NULL;
+            Node *temp = root;
+            while (temp != NULL)
+            {
+                y = temp;
+                if (n->entry->key < temp->entry->key)
+                    temp = temp->left;
+                else
+                    temp = temp->right;
+            }
+            n->parent = y;
+
+            if (y == NULL) //newly added node is root
+                root = n;
+            else if (n->entry->key < y->entry->key)
+                y->left = n;
+            else
+                y->right = n;
+
+            splay(n);
+        }
+        void add(K key, V value);
         Node *add(Entry *&entry)
         {
+            Node *n = new Node(entry);
             if (root == NULL)
             {
-                root = new Node(entry);
+                root = n;
                 return root;
             }
-            return insert(root, entry);
+            insert(n);
+            return root;
         }
         void remove(K key);
         V search(K key);
