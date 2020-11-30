@@ -30,18 +30,48 @@ public:
     {
         avl = new AVLTree();
         splay = new SplayTree();
+        this->maxNumOfKeys = maxNumOfKeys;
     }
     ~BKUTree() { this->clear(); }
+    bool isPresent(typename AVLTree::Node *node, int key)
+    {
+        if (node == NULL)
+            return false;
 
+        if (node->entry->key == key)
+            return true;
+
+        /* then recur on left sutree */
+        bool res1 = isPresent(node->left, key);
+        // node found, no need to look further
+        if (res1)
+            return true;
+
+        /* node is not found in left, 
+    so recur on right subtree */
+        bool res2 = isPresent(node->right, key);
+
+        return res2;
+    }
     void add(K key, V value)
     {
+        if (isPresent(avl->root, key) == true)
+            throw runtime_error("Duplicate key");
         Entry *newEntry = new Entry(key, value);
         typename AVLTree::Node *point = avl->AVLTree::add(newEntry);
         typename SplayTree::Node *point1 = splay->SplayTree::add(newEntry);
         point->corr = point1;
         point1->corr = point;
+        if (keys.size() >= maxNumOfKeys)
+            keys.pop();
+        keys.push(key);
     }
-    void remove(K key);
+    void remove(K key)
+    {
+        if (isPresent(avl->root, key) == false)
+            throw runtime_error("Not found");
+        splay->SplayTree::remove(key);
+    }
     V search(K key, vector<K> &traversedList);
 
     void traverseNLROnAVL(void (*func)(K key, V value))
@@ -196,9 +226,30 @@ public:
 
             splay(n);
         }
-        void add(K key, V value);
+        Node *add(K key, V value)
+        {
+            if (isPresent(root, key) != NULL)
+                throw runtime_error("Duplicate key");
+            Entry *entry = new Entry(key, value);
+            return add(entry);
+        }
+        Node *isPresent(Node *node, int key)
+        {
+            if (node == NULL)
+                return NULL;
+            if (node->entry->key == key)
+                return node;
+            Node *res1 = isPresent(node->left, key);
+            if (res1)
+                return res1;
+            Node *res2 = isPresent(node->right, key);
+
+            return res2;
+        }
         Node *add(Entry *&entry)
         {
+            if (isPresent(root, entry->key) != NULL)
+                throw runtime_error("Duplicate key");
             Node *n = new Node(entry);
             if (root == NULL)
             {
@@ -208,7 +259,49 @@ public:
             insert(n);
             return root;
         }
-        void remove(K key);
+        Node *maximum(Node *x)
+        {
+            while (x->right != NULL)
+                x = x->right;
+            return x;
+        }
+        void deleteNode(Node *n)
+        {
+            splay(n);
+
+            SplayTree *left_subtree = new SplayTree();
+            left_subtree->root = this->root->left;
+            if (left_subtree->root != NULL)
+                left_subtree->root->parent = NULL;
+
+            SplayTree *right_subtree = new SplayTree();
+            right_subtree->root = this->root->right;
+            if (right_subtree->root != NULL)
+                right_subtree->root->parent = NULL;
+
+            delete n;
+
+            if (left_subtree->root != NULL)
+            {
+                Node *m = maximum(left_subtree->root);
+                left_subtree->splay(m);
+                left_subtree->root->right = right_subtree->root;
+                this->root = left_subtree->root;
+            }
+            else
+            {
+                this->root = right_subtree->root;
+            }
+        }
+        void remove(K key)
+        {
+            Node *n = isPresent(root, key);
+            if (n == NULL)
+            {
+                throw runtime_error("Not found");
+            }
+            deleteNode(n);
+        }
         V search(K key);
 
         void traverseRec(Node *r, void (*func)(K key, V value))
@@ -374,10 +467,37 @@ public:
 
             return r;
         }
+        bool isPresent(Node *node, int key)
+        {
+            if (node == NULL)
+                return false;
 
-        void add(K key, V value);
+            if (node->entry->key == key)
+                return true;
+
+            /* then recur on left sutree */
+            bool res1 = isPresent(node->left, key);
+            // node found, no need to look further
+            if (res1)
+                return true;
+
+            /* node is not found in left, 
+    so recur on right subtree */
+            bool res2 = isPresent(node->right, key);
+
+            return res2;
+        }
+        Node *add(K key, V value)
+        {
+            if (isPresent(root, key) == true)
+                throw runtime_error("Duplicate key");
+            Entry *entry = new Entry(key, value);
+            return add(entry);
+        }
         Node *add(Entry *&entry)
         {
+            if (isPresent(root, entry->key) == true)
+                throw runtime_error("Duplicate key");
             if (root == NULL)
             {
                 root = new Node(entry);
@@ -416,5 +536,6 @@ int main()
     int keys[] = {1, 3, 5, 7, 9, 2, 4};
     for (int i = 0; i < 7; i++)
         tree->add(keys[i], keys[i]);
+    tree->remove(5);
     tree->traverseNLROnSplay(printKey);
 }
