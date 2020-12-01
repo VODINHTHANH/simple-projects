@@ -68,9 +68,27 @@ public:
     }
     void remove(K key)
     {
-        if (isPresent(avl->root, key) == false)
-            throw runtime_error("Not found");
         splay->SplayTree::remove(key);
+        avl->AVLTree::remove(key);
+        queue<K> temp;
+        while (keys.empty() == false)
+        {
+            if (keys.front() != key)
+            {
+                temp.push(keys.front());
+                keys.pop();
+            }
+            else
+            {
+                keys.pop();
+            }
+        }
+        while (temp.empty() == false)
+        {
+
+            keys.push(temp.front());
+            temp.pop();
+        }
     }
     V search(K key, vector<K> &traversedList);
 
@@ -505,15 +523,88 @@ public:
             }
             return insertRec(root, entry);
         }
-        Node *getMaxOfLeft(Node *x)
+        Node *inpre(Node *p)
         {
-            Node *current = x;
-            while (current->right != NULL)
-                current = current->left;
-            return current;
+            while (p->right != NULL)
+                p = p->right;
+            return p;
+        }
+
+        Node *insuc(Node *p)
+        {
+            while (p->left != NULL)
+                p = p->left;
+
+            return p;
+        }
+        Node *deleteNode(Node *p, Node *n)
+        {
+            if (p->left == NULL && p->right == NULL)
+            {
+                if (p == this->root)
+                    this->root = NULL;
+                delete p;
+                return NULL;
+            }
+            Node *q;
+            if (p->entry->key < n->entry->key)
+            {
+                p->right = deleteNode(p->right, n);
+            }
+            else if (p->entry->key > n->entry->key)
+            {
+                p->left = deleteNode(p->left, n);
+            }
+            else
+            {
+                if (p->left != NULL)
+                {
+                    q = inpre(p->left);
+                    p->entry->key = q->entry->key;
+                    p->left = deleteNode(p->left, q);
+                }
+                else
+                {
+                    q = insuc(p->right);
+                    p->entry->key = q->entry->key;
+                    p->right = deleteNode(p->right, q);
+                }
+            }
+            if (bf(p) == 2 && bf(p->left) == 1)
+            {
+                p = llrotation(p);
+            }
+            else if (bf(p) == 2 && bf(p->left) == -1)
+            {
+                p = lrrotation(p);
+            }
+            else if (bf(p) == 2 && bf(p->left) == 0)
+            {
+                p = llrotation(p);
+            }
+            else if (bf(p) == -2 && bf(p->right) == -1)
+            {
+                p = rrrotation(p);
+            }
+            else if (bf(p) == -2 && bf(p->right) == 1)
+            {
+                p = rlrotation(p);
+            }
+            else if (bf(p) == -2 && bf(p->right) == 0)
+            {
+                p = llrotation(p);
+            }
+
+            return p;
         }
         void remove(K key)
         {
+            Node *n = isPresent(root, key);
+            if (n == NULL)
+            {
+                throw runtime_error("Not found");
+            }
+            deleteNode(root, n);
         }
         V search(K key);
         void traverseRec(Node *r, void (*func)(K key, V value))
@@ -544,5 +635,6 @@ int main()
     int keys[] = {1, 3, 5, 7, 9, 2, 4};
     for (int i = 0; i < 7; i++)
         tree->add(keys[i], keys[i]);
-    tree->traverseNLROnSplay(printKey);
+    tree->remove(7);
+    tree->traverseNLROnAVL(printKey);
 }
