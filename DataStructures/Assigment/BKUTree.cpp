@@ -467,36 +467,36 @@ public:
 
             return r;
         }
-        bool isPresent(Node *node, int key)
+        Node *isPresent(Node *node, int key)
         {
             if (node == NULL)
-                return false;
+                return NULL;
 
             if (node->entry->key == key)
-                return true;
+                return node;
 
             /* then recur on left sutree */
-            bool res1 = isPresent(node->left, key);
+            Node *res1 = isPresent(node->left, key);
             // node found, no need to look further
             if (res1)
-                return true;
+                return res1;
 
             /* node is not found in left, 
-    so recur on right subtree */
-            bool res2 = isPresent(node->right, key);
+         so recur on right subtree */
+            Node *res2 = isPresent(node->right, key);
 
             return res2;
         }
         Node *add(K key, V value)
         {
-            if (isPresent(root, key) == true)
+            if (isPresent(root, key) != true)
                 throw runtime_error("Duplicate key");
             Entry *entry = new Entry(key, value);
             return add(entry);
         }
         Node *add(Entry *&entry)
         {
-            if (isPresent(root, entry->key) == true)
+            if (isPresent(root, entry->key) != NULL)
                 throw runtime_error("Duplicate key");
             if (root == NULL)
             {
@@ -505,8 +505,16 @@ public:
             }
             return insertRec(root, entry);
         }
-
-        void remove(K key);
+        Node *getMaxOfLeft(Node *x)
+        {
+            Node *current = x;
+            while (current->right != NULL)
+                current = current->left;
+            return current;
+        }
+        void remove(K key)
+        {
+        }
         V search(K key);
         void traverseRec(Node *r, void (*func)(K key, V value))
         {
@@ -536,6 +544,5 @@ int main()
     int keys[] = {1, 3, 5, 7, 9, 2, 4};
     for (int i = 0; i < 7; i++)
         tree->add(keys[i], keys[i]);
-    tree->remove(5);
     tree->traverseNLROnSplay(printKey);
 }
