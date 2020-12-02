@@ -1,11 +1,11 @@
 .data
-array: .float 4.5, 7.8, 3.7
+array: .float 4.5, 7.8, 3.7 , 2.8, 9.6, 41.5, 7.8, 32.7 , 2.83, 9.6, 4.5, 27.8, 7.7 , 2.2, 7.6, 4.5, 7.4, 33.7 , 67.8, 6.6
 xuongH: .asciiz "\n"
 .text
 #print array
     la      $t1, array
 loop1:
-    bge     $t0, 3, exit
+    bge     $t0, 20 exit
 
     # load word from addrs and goes to the next addrs
     lwc1    $f0, 0($t1)
@@ -31,7 +31,7 @@ syscall
 #END PRINT ARRAY
 #Find MIN
 la $t1, array  #t1 = array
-addi $t5, $zero, 3 #size of array
+addi $t5, $zero, 20 #size of array
 li $t0, 0 #t1= bien dem
 lwc1 $f0, 0($t1) #min = t3
 loop:
@@ -50,7 +50,7 @@ j loop
 keepFindMax:
 #Find MAX
 la $t1, array  #t1 = array
-addi $t5, $zero, 3 #size of array
+addi $t5, $zero, 20 #size of array
 li $t0, 0 #t1= bien dem
 lwc1 $f1, 0($t1) #max = t3
 loopMax:
