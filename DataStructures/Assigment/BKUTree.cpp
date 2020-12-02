@@ -90,7 +90,46 @@ public:
             temp.pop();
         }
     }
-    V search(K key, vector<K> &traversedList);
+    bool isPresentInQueue(K key)
+    {
+        queue<K> temp;
+        bool flag = false;
+        while (keys.empty() == false)
+        {
+            if (keys.front() == key)
+            {
+                temp.push(keys.front());
+                keys.pop();
+                flag = true;
+            }
+            else
+            {
+                temp.push(keys.front());
+                keys.pop();
+            }
+        }
+        while (temp.empty() == false)
+        {
+            keys.push(temp.front());
+            temp.pop();
+        }
+        return flag;
+    }
+    V search(K key, vector<K> &traversedList)
+    {
+        if (splay->root->entry->key == key)
+        {
+            return splay->root->entry->value;
+        }
+        else if (isPresentInQueue(key))
+        {
+            splay->search(key);
+        }
+        else
+        {
+        }
+        return splay->root->entry->value;
+    }
 
     void traverseNLROnAVL(void (*func)(K key, V value))
     {
@@ -320,7 +359,19 @@ public:
             }
             deleteNode(n);
         }
-        V search(K key);
+        V search(K key)
+        {
+            Node *n = isPresent(root, key);
+            if (n == NULL)
+            {
+                throw runtime_error("Not found");
+            }
+            else
+            {
+                splay(n);
+                return n->entry->value;
+            }
+        }
 
         void traverseRec(Node *r, void (*func)(K key, V value))
         {
@@ -367,10 +418,6 @@ public:
 
         AVLTree() : root(NULL){};
         ~AVLTree() { this->clear(); };
-        int getHeight()
-        {
-            return this->getHeightRec(this->root);
-        }
         int getHeightRec(Node *Node)
         {
             if (Node == NULL)
@@ -606,7 +653,18 @@ public:
             }
             deleteNode(root, n);
         }
-        V search(K key);
+        V search(K key)
+        {
+            Node *n = isPresent(root, key);
+            if (n == NULL)
+            {
+                throw runtime_error("Not found");
+            }
+            else
+            {
+                return n->entry->value;
+            }
+        }
         void traverseRec(Node *r, void (*func)(K key, V value))
         {
             if (r == NULL)
@@ -635,6 +693,7 @@ int main()
     int keys[] = {1, 3, 5, 7, 9, 2, 4};
     for (int i = 0; i < 7; i++)
         tree->add(keys[i], keys[i]);
-    tree->remove(7);
-    tree->traverseNLROnAVL(printKey);
+    tree->traverseNLROnSplay(printKey);
+    vector<int> x;
+    cout << tree->search(4, x);
 }
