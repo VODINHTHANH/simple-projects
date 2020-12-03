@@ -4,16 +4,20 @@ using namespace std;
 int jumpSearch(int arr[], int x, int n)
 {
     cout << 0 << " ";
+    if (arr[0] == x)
+    {
+        return 0;
+    }
     int step = sqrt(n);
     cout << step << " ";
     while (arr[step] < x)
     {
         step += sqrt(n);
+        cout << step << " ";
         if (step >= n)
         {
             break;
         }
-        cout << step << " ";
     }
     if (step < n && arr[step] == x)
     {
@@ -58,10 +62,9 @@ int jumpSearch(int arr[], int x, int n)
 // Driver program to test function
 int main()
 {
-    int arr[] = {0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 611, 614, 612};
-    int x = 612;
+    int arr[] = {0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 611, 612, 613};
+    int x = 614;
     int n = sizeof(arr) / sizeof(arr[0]);
-    cout << n << endl;
     int index = jumpSearch(arr, x, n);
 
     if (index != -1)
