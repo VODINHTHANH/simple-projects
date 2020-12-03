@@ -33,7 +33,7 @@ public:
         this->maxNumOfKeys = maxNumOfKeys;
     }
     ~BKUTree() { this->clear(); }
-    bool isPresent(typename AVLTree::Node *node, int key)
+    bool isPresentBKU(typename AVLTree::Node *node, int key)
     {
         if (node == NULL)
             return false;
@@ -42,20 +42,20 @@ public:
             return true;
 
         /* then recur on left sutree */
-        bool res1 = isPresent(node->left, key);
+        bool res1 = isPresentBKU(node->left, key);
         // node found, no need to look further
         if (res1)
             return true;
 
         /* node is not found in left, 
     so recur on right subtree */
-        bool res2 = isPresent(node->right, key);
+        bool res2 = isPresentBKU(node->right, key);
 
         return res2;
     }
     void add(K key, V value)
     {
-        if (isPresent(avl->root, key) == true)
+        if (isPresentBKU(avl->root, key) == true)
             throw runtime_error("Duplicate key");
         Entry *newEntry = new Entry(key, value);
         typename AVLTree::Node *point = avl->AVLTree::add(newEntry);
@@ -127,8 +127,31 @@ public:
         }
         else
         {
+            typename AVLTree::Node *p = splay->root->corr;       //find correspond in avl
+            typename AVLTree::Node *p1 = avl->isPresent(p, key); //find from this corr
+            if (p1 != NULL)
+            {
+                if (keys.size() >= maxNumOfKeys)
+                    keys.pop();
+                keys.push(p1->entry->value);
+                return p1->entry->value;
+            }
+            else // find from root if not found
+            {
+                typename AVLTree::Node *p2 = avl->findFromRoot(avl->root, p, key);
+                if (p2 == NULL)
+                {
+                    throw runtime_error("Not found");
+                }
+                typename SplayTree::Node *p3 = p2->corr;
+                splay->splay(p3);
+                if (keys.size() >= maxNumOfKeys)
+                    keys.pop();
+                keys.push(p2->entry->value);
+                return p2->entry->value;
+            }
         }
-        return splay->root->entry->value;
+        return -1;
     }
 
     void traverseNLROnAVL(void (*func)(K key, V value))
@@ -552,6 +575,29 @@ public:
 
             return res2;
         }
+        Node *findFromRoot(Node *node, Node *r, K key)
+        {
+            if (node == NULL)
+                return NULL;
+
+            if (node->entry->key == key)
+                return node;
+            if (node == r)
+            {
+                throw runtime_error("Not found");
+            }
+            /* then recur on left sutree */
+            Node *res1 = isPresent(node->left, key);
+            // node found, no need to look further
+            if (res1)
+                return res1;
+
+            /* node is not found in left, 
+         so recur on right subtree */
+            Node *res2 = isPresent(node->right, key);
+
+            return res2;
+        }
         Node *add(K key, V value)
         {
             if (isPresent(root, key) != true)
@@ -576,7 +622,6 @@ public:
                 p = p->right;
             return p;
         }
-
         Node *insuc(Node *p)
         {
             while (p->left != NULL)
