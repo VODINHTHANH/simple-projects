@@ -19,6 +19,16 @@ sqft_living <- c(mean(new_DF$sqft_living), median(new_DF$sqft_living), sd(new_DF
 table <- data.frame(price, sqft_living15, sqft_above, sqft_living)
 row.names(table) <- c("mean", "median", "sd", "min", "max")
 #3c
-new_DF$floors
 new_DF$floors <- factor(new_DF$floors)
-summary(new_DF$floors)
+table(new_DF$floors)
+new_DF$condition <- factor(new_DF$condition)
+table(new_DF$condition)
+#3d
+hist(new_DF$price)
+#3e
+boxplot(price~floors, data = new_DF, main="Boxplot for each floors")
+boxplot(price~condition, data = new_DF, main="Boxplot for each condition")
+#3f
+#pairs(price~sqft_above+sqft_living+sqft_living15, data = new_DF)
+#4a
+summary(lm(price~sqft_above+sqft_living+sqft_living15+floors+condition , data = new_DF))
