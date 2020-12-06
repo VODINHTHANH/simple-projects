@@ -33,35 +33,27 @@ public:
         this->maxNumOfKeys = maxNumOfKeys;
     }
     ~BKUTree() { this->clear(); }
-    bool isPresentBKU(typename AVLTree::Node *node, int key)
+    bool isPresentBKU(typename AVLTree::Node *rt, int key)
     {
-        if (node == NULL)
+        if (rt == NULL)
             return false;
-
-        if (node->entry->key == key)
+        if (key == rt->entry->key)
             return true;
+        if (key < rt->entry->key)
+            return isPresentBKU(rt->left, key);
 
-        /* then recur on left sutree */
-        bool res1 = isPresentBKU(node->left, key);
-        // node found, no need to look further
-        if (res1)
-            return true;
-
-        /* node is not found in left, 
-    so recur on right subtree */
-        bool res2 = isPresentBKU(node->right, key);
-
-        return res2;
+        return isPresentBKU(rt->right, key);
     }
     void add(K key, V value)
     {
         if (isPresentBKU(avl->root, key) == true)
             throw runtime_error("Duplicate key");
         Entry *newEntry = new Entry(key, value);
-        typename AVLTree::Node *point = avl->AVLTree::add(newEntry);
-        typename SplayTree::Node *point1 = splay->SplayTree::add(newEntry);
-        point->corr = point1;
-        point1->corr = point;
+        avl->AVLTree::add(newEntry);
+        typename AVLTree::Node *point = avl->isPresent(avl->root, key);
+        splay->SplayTree::add(newEntry);
+        point->corr = splay->root;
+        splay->root->corr = point;
         if (keys.size() >= maxNumOfKeys)
             keys.pop();
         keys.push(key);
@@ -129,24 +121,27 @@ public:
         }
         else
         {
-            typename AVLTree::Node *p = splay->root->corr;       //find correspond in avl
-            typename AVLTree::Node *p1 = avl->isPresent(p, key); //find from this corr
+            typename AVLTree::Node *r = splay->root->corr;
+
+            typename AVLTree::Node *p1 = avl->searchTrav(r, key, traversedList); //find from this corr
             if (p1 != NULL)
             {
                 if (keys.size() >= maxNumOfKeys)
                     keys.pop();
                 keys.push(p1->entry->value);
-                return p1->entry->value;
+                typename SplayTree::Node *f = p1->corr;
+                splay->splayOne(f);
+                return f->entry->value;
             }
             else // find from root if not found
             {
-                typename AVLTree::Node *p2 = avl->findFromRoot(avl->root, p, key);
+                typename AVLTree::Node *p2 = avl->findFromRoot(avl->root, r, key, traversedList);
                 if (p2 == NULL)
                 {
                     throw runtime_error("Not found");
                 }
                 typename SplayTree::Node *p3 = p2->corr;
-                splay->splay(p3);
+                splay->splayOne(p3);
                 if (keys.size() >= maxNumOfKeys)
                     keys.pop();
                 keys.push(p2->entry->value);
@@ -361,18 +356,16 @@ public:
             Entry *entry = new Entry(key, value);
             return add(entry);
         }
-        Node *isPresent(Node *node, int key)
+        Node *isPresent(Node *rt, int key)
         {
-            if (node == NULL)
+            if (rt == NULL)
                 return NULL;
-            if (node->entry->key == key)
-                return node;
-            Node *res1 = isPresent(node->left, key);
-            if (res1)
-                return res1;
-            Node *res2 = isPresent(node->right, key);
+            if (key == rt->entry->key)
+                return rt;
+            if (key < rt->entry->key)
+                return isPresent(rt->left, key);
 
-            return res2;
+            return isPresent(rt->right, key);
         }
         Node *searchTrav(Node *rt, int key, vector<K> &traverseList)
         {
@@ -585,11 +578,12 @@ public:
 
             return tp2;
         }
-        Node *insertRec(Node *&r, Entry *&entry)
+
+        Node *insertRec(Node *&r, Entry *entry)
         {
             if (r == NULL)
             {
-                Node *r = new Node(entry, NULL, NULL); //create new Node with entry
+                Node *r = new Node(entry); //create new Node with entry
                 return r;
             }
             if (entry->key < r->entry->key)
@@ -613,51 +607,44 @@ public:
             {
                 r = lrrotation(r);
             }
-
             return r;
         }
-        Node *isPresent(Node *node, int key)
+        Node *isPresent(Node *rt, int key)
         {
-            if (node == NULL)
+            if (rt == NULL)
                 return NULL;
+            if (key == rt->entry->key)
+                return rt;
+            if (key < rt->entry->key)
+                return isPresent(rt->left, key);
 
-            if (node->entry->key == key)
-                return node;
-
-            /* then recur on left sutree */
-            Node *res1 = isPresent(node->left, key);
-            // node found, no need to look further
-            if (res1)
-                return res1;
-
-            /* node is not found in left, 
-         so recur on right subtree */
-            Node *res2 = isPresent(node->right, key);
-
-            return res2;
+            return isPresent(rt->right, key);
         }
-        Node *findFromRoot(Node *node, Node *r, K key)
+        Node *searchTrav(Node *rt, int key, vector<K> traversedList)
         {
-            if (node == NULL)
+            if (rt == NULL)
                 return NULL;
+            if (key == rt->entry->key)
+                return rt;
+            traversedList.push_back(rt->entry->key);
+            if (key < rt->entry->key)
+                return searchTrav(rt->left, key, traversedList);
 
-            if (node->entry->key == key)
-                return node;
-            if (node == r)
-            {
+            return searchTrav(rt->right, key, traversedList);
+        }
+        Node *findFromRoot(Node *rt, Node *r, K key, vector<K> traversedList)
+        {
+            if (rt == NULL)
+                return NULL;
+            if (rt == r)
                 throw runtime_error("Not found");
-            }
-            /* then recur on left sutree */
-            Node *res1 = isPresent(node->left, key);
-            // node found, no need to look further
-            if (res1)
-                return res1;
+            if (key == rt->entry->key)
+                return rt;
+            traversedList.push_back(rt->entry->key);
+            if (key < rt->entry->key)
+                return searchTrav(rt->left, key, traversedList);
 
-            /* node is not found in left, 
-         so recur on right subtree */
-            Node *res2 = isPresent(node->right, key);
-
-            return res2;
+            return searchTrav(rt->right, key, traversedList);
         }
         Node *add(K key, V value)
         {
@@ -666,7 +653,7 @@ public:
             Entry *entry = new Entry(key, value);
             return add(entry);
         }
-        Node *add(Entry *&entry)
+        Node *add(Entry *entry)
         {
             if (isPresent(root, entry->key) != NULL)
                 throw runtime_error("Duplicate key");
@@ -800,9 +787,13 @@ int main()
     for (int i = 0; i < 7; i++)
         tree->add(keys[i], keys[i]);
     tree->traverseNLROnSplay(printKey);
-    vector<int> x;
-    tree->search(4, x);
     cout << "!!!!!!!!!" << endl;
+
+    tree->traverseNLROnAVL(printKey);
+    cout << "!!!!!!!!!" << endl;
+    vector<int> x;
+    cout << tree->search(1, x) << endl;
+    cout << "!!!!!!!!!!!" << endl;
     tree->traverseNLROnSplay(printKey);
     cout << "!!!!!!!!!!!" << endl;
     for (auto &it : x)
