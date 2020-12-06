@@ -620,7 +620,7 @@ public:
 
             return isPresent(rt->right, key);
         }
-        Node *searchTrav(Node *rt, int key, vector<K> traversedList)
+        Node *searchTrav(Node *rt, int key, vector<K> &traversedList)
         {
             if (rt == NULL)
                 return NULL;
@@ -632,7 +632,7 @@ public:
 
             return searchTrav(rt->right, key, traversedList);
         }
-        Node *findFromRoot(Node *rt, Node *r, K key, vector<K> traversedList)
+        Node *findFromRoot(Node *rt, Node *&r, K key, vector<K> &traversedList)
         {
             if (rt == NULL)
                 return NULL;
@@ -792,7 +792,7 @@ int main()
     tree->traverseNLROnAVL(printKey);
     cout << "!!!!!!!!!" << endl;
     vector<int> x;
-    cout << tree->search(1, x) << endl;
+    cout << tree->search(3, x) << endl;
     cout << "!!!!!!!!!!!" << endl;
     tree->traverseNLROnSplay(printKey);
     cout << "!!!!!!!!!!!" << endl;
