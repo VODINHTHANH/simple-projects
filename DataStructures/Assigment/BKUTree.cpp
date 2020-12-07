@@ -54,9 +54,7 @@ public:
         splay->SplayTree::add(newEntry);
         point->corr = splay->root;
         splay->root->corr = point;
-        if (keys.size() >= maxNumOfKeys)
-            keys.pop();
-        keys.push(key);
+        pushQ(keys, key);
     }
     void remove(K key)
     {
@@ -81,6 +79,14 @@ public:
             keys.push(temp.front());
             temp.pop();
         }
+        pushQ(keys, splay->root->entry->key);
+    }
+    void pushQ(queue<K> &k, K key)
+    {
+        int size = k.size();
+        if (size >= maxNumOfKeys)
+            k.pop();
+        k.push(key);
     }
     bool isPresentInQueue(K key)
     {
@@ -126,9 +132,7 @@ public:
             typename AVLTree::Node *p1 = avl->searchTrav(r, key, traversedList); //find from this corr
             if (p1 != NULL)
             {
-                if (keys.size() >= maxNumOfKeys)
-                    keys.pop();
-                keys.push(p1->entry->value);
+                pushQ(keys, p1->entry->value);
                 typename SplayTree::Node *f = p1->corr;
                 splay->splayOne(f);
                 return f->entry->value;
@@ -142,9 +146,7 @@ public:
                 }
                 typename SplayTree::Node *p3 = p2->corr;
                 splay->splayOne(p3);
-                if (keys.size() >= maxNumOfKeys)
-                    keys.pop();
-                keys.push(p2->entry->value);
+                pushQ(keys, p2->entry->value);
                 return p2->entry->value;
             }
         }
@@ -160,7 +162,11 @@ public:
         splay->traverseNLR(func);
     }
 
-    void clear();
+    void clear()
+    {
+        avl->clear();
+        splay->clear();
+    }
 
     class SplayTree
     {
@@ -379,7 +385,7 @@ public:
 
             return searchTrav(rt->right, key, traverseList);
         }
-        Node *add(Entry *&entry)
+        Node *add(Entry *entry)
         {
             if (isPresent(root, entry->key) != NULL)
                 throw runtime_error("Duplicate key");
@@ -413,7 +419,16 @@ public:
                 right_subtree->root->parent = NULL;
 
             delete n;
-
+            if (right_subtree->root == NULL)
+            {
+                this->root = left_subtree->root;
+                return;
+            }
+            if (left_subtree->root == NULL)
+            {
+                this->root = right_subtree->root;
+                return;
+            }
             if (left_subtree->root != NULL)
             {
                 Node *m = maximum(left_subtree->root);
@@ -445,7 +460,7 @@ public:
             }
             else
             {
-                splayOne(n);
+                splay(n);
                 return n->entry->value;
             }
         }
@@ -465,7 +480,18 @@ public:
             traverseRec(root, func);
         }
 
-        void clear();
+        void deleteTree(Node *node)
+        {
+            if (node == NULL)
+                return;
+            deleteTree(node->left);
+            deleteTree(node->right);
+            delete node;
+        }
+        void clear()
+        {
+            deleteTree(root);
+        }
     };
 
     class AVLTree
@@ -477,7 +503,6 @@ public:
             Entry *entry;
             Node *left;
             Node *right;
-            int balance;
             typename SplayTree::Node *corr;
 
             Node(Entry *entry = NULL, Node *left = NULL, Node *right = NULL)
@@ -485,7 +510,6 @@ public:
                 this->entry = entry;
                 this->left = left;
                 this->right = right;
-                this->balance = 0;
                 this->corr = NULL;
             }
         };
@@ -772,8 +796,18 @@ public:
                 return;
             traverseRec(root, func);
         }
-
-        void clear();
+        void deleteTree(Node *node)
+        {
+            if (node == NULL)
+                return;
+            deleteTree(node->left);
+            deleteTree(node->right);
+            delete node;
+        }
+        void clear()
+        {
+            deleteTree(root);
+        }
     };
 };
 void printKey(int key, int value)
@@ -787,17 +821,4 @@ int main()
     for (int i = 0; i < 7; i++)
         tree->add(keys[i], keys[i]);
     tree->traverseNLROnSplay(printKey);
-    cout << "!!!!!!!!!" << endl;
-
-    tree->traverseNLROnAVL(printKey);
-    cout << "!!!!!!!!!" << endl;
-    vector<int> x;
-    cout << tree->search(3, x) << endl;
-    cout << "!!!!!!!!!!!" << endl;
-    tree->traverseNLROnSplay(printKey);
-    cout << "!!!!!!!!!!!" << endl;
-    for (auto &it : x)
-    {
-        cout << it << ' ';
-    }
 }
