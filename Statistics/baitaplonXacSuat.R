@@ -19,9 +19,7 @@ sqft_living <- c(mean(new_DF$sqft_living), median(new_DF$sqft_living), sd(new_DF
 table <- data.frame(price, sqft_living15, sqft_above, sqft_living)
 row.names(table) <- c("mean", "median", "sd", "min", "max")
 #3c
-#new_DF$floors <- factor(new_DF$floors)
 table(new_DF$floors)
-#new_DF$condition <- factor(new_DF$condition)
 table(new_DF$condition)
 #3d
 hist(new_DF$price)
@@ -31,5 +29,27 @@ boxplot(price~condition, data = new_DF, main="Boxplot for each condition")
 #3f
 #pairs(price~sqft_above+sqft_living+sqft_living15, data = new_DF)
 #4a
-mulfit <- lm(price~sqft_above+sqft_living+sqft_living15+floors+condition , data = new_DF)
-mulfit
+#new_DF$condition <- factor(new_DF$condition)
+#new_DF$floors <- factor(new_DF$floors)
+m1 <- lm(price~sqft_above+sqft_living+sqft_living15+floors+condition , data = new_DF)
+summary(m1)
+m2 <- lm(price~sqft_above+sqft_living+sqft_living15+floors , data = new_DF)
+summary(m2)
+plot(m1, which =1)
+#4c
+anova(m1, m2)
+x1_data = data.frame(sqft_living15 = mean(new_DF$sqft_living15),
+                     sqft_above = mean(new_DF$sqft_above),
+                     sqft_living= mean(new_DF$sqft_living),
+                     floors = 2,
+                     condition = 3
+)
+predict(m1,x1_data,interval = "confidence")
+x2_data = data.frame(sqft_living15 = max(new_DF$sqft_living15),
+                     sqft_above =max(new_DF$sqft_above),
+                     sqft_living = max(new_DF$sqft_living),
+                     floors = 2,
+                     condition = 3
+)
+predict(m1,x2_data,interval = "confidence")
+
