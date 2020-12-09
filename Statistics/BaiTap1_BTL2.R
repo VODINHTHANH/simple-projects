@@ -27,7 +27,7 @@ hist(new_DF$price)
 boxplot(price~floors, data = new_DF, main="Boxplot for each floors")
 boxplot(price~condition, data = new_DF, main="Boxplot for each condition")
 #3f
-pairs(price~sqft_above+sqft_living+sqft_living15, data = new_DF)
+#pairs(price~sqft_above+sqft_living+sqft_living15, data = new_DF)
 #4a
 m1 <- lm(price~sqft_above+sqft_living+sqft_living15+floors+condition , data = new_DF)
 summary(m1)
