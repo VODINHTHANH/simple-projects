@@ -47,7 +47,7 @@ public:
     void add(K key, V value)
     {
         if (isPresentBKU(avl->root, key) == true)
-            throw runtime_error("Duplicate key");
+            throw "Duplicate key";
         Entry *newEntry = new Entry(key, value);
         avl->AVLTree::add(newEntry);
         typename AVLTree::Node *point = avl->isPresent(avl->root, key);
@@ -142,7 +142,7 @@ public:
                 typename AVLTree::Node *p2 = avl->findFromRoot(avl->root, r, key, traversedList);
                 if (p2 == NULL)
                 {
-                    throw runtime_error("Not found");
+                    throw "Not found";
                 }
                 typename SplayTree::Node *p3 = p2->corr;
                 splay->splayOne(p3);
@@ -358,7 +358,7 @@ public:
         Node *add(K key, V value)
         {
             if (isPresent(root, key) != NULL)
-                throw runtime_error("Duplicate key");
+                throw "Duplicate key";
             Entry *entry = new Entry(key, value);
             return add(entry);
         }
@@ -388,7 +388,7 @@ public:
         Node *add(Entry *entry)
         {
             if (isPresent(root, entry->key) != NULL)
-                throw runtime_error("Duplicate key");
+                throw "Duplicate key";
             Node *n = new Node(entry);
             if (root == NULL)
             {
@@ -446,7 +446,7 @@ public:
             Node *n = isPresent(root, key);
             if (n == NULL)
             {
-                throw runtime_error("Not found");
+                throw "Not found";
             }
             deleteNode(n);
         }
@@ -456,7 +456,7 @@ public:
 
             if (n == NULL)
             {
-                throw runtime_error("Not found");
+                throw "Not found";
             }
             else
             {
@@ -661,7 +661,7 @@ public:
             if (rt == NULL)
                 return NULL;
             if (rt == r)
-                throw runtime_error("Not found");
+                throw "Not found";
             if (key == rt->entry->key)
                 return rt;
             traversedList.push_back(rt->entry->key);
@@ -673,14 +673,14 @@ public:
         Node *add(K key, V value)
         {
             if (isPresent(root, key) != true)
-                throw runtime_error("Duplicate key");
+                throw "Duplicate key";
             Entry *entry = new Entry(key, value);
             return add(entry);
         }
         Node *add(Entry *entry)
         {
             if (isPresent(root, entry->key) != NULL)
-                throw runtime_error("Duplicate key");
+                throw "Duplicate key";
             if (root == NULL)
             {
                 root = new Node(entry);
@@ -766,7 +766,7 @@ public:
             Node *n = isPresent(root, key);
             if (n == NULL)
             {
-                throw runtime_error("Not found");
+                throw "Not found";
             }
             deleteNode(root, n);
         }
@@ -775,7 +775,7 @@ public:
             Node *n = isPresent(root, key);
             if (n == NULL)
             {
-                throw runtime_error("Not found");
+                throw "Not found";
             }
             else
             {
@@ -820,5 +820,6 @@ int main()
     int keys[] = {1, 3, 5, 7, 9, 2, 4};
     for (int i = 0; i < 7; i++)
         tree->add(keys[i], keys[i]);
+    tree->remove(10);
     tree->traverseNLROnSplay(printKey);
 }
