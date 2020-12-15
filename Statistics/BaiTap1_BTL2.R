@@ -18,6 +18,7 @@ sqft_above <- c(mean(new_DF$sqft_above), median(new_DF$sqft_above), sd(new_DF$sq
 sqft_living <- c(mean(new_DF$sqft_living), median(new_DF$sqft_living), sd(new_DF$sqft_living), min(new_DF$sqft_living), max(new_DF$sqft_living))
 table <- data.frame(price, sqft_living15, sqft_above, sqft_living)
 row.names(table) <- c("mean", "median", "sd", "min", "max")
+table
 #3c
 table(new_DF$floors)
 table(new_DF$condition)
