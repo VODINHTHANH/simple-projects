@@ -768,7 +768,7 @@ public:
             {
                 throw "Not found";
             }
-            deleteNode(root, n);
+            root = deleteNode(root, n);
         }
         V search(K key)
         {
@@ -812,14 +812,22 @@ public:
 };
 void printKey(int key, int value)
 {
-    cout << key << endl;
+    cout << key << " ";
 }
 int main()
 {
-    BKUTree<int, int> *tree = new BKUTree<int, int>();
+    BKUTree<int, int> *tree = new BKUTree<int, int>(3);
     int keys[] = {1, 3, 5, 7, 9, 2, 4};
     for (int i = 0; i < 7; i++)
         tree->add(keys[i], keys[i]);
-    tree->remove(10);
+    vector<int> x;
+    cout << tree->search(9, x) << endl;
+    for (auto i : x)
+    {
+        cout << i << " ";
+    }
+    cout << endl;
     tree->traverseNLROnSplay(printKey);
+    cout << endl;
+    tree->traverseNLROnAVL(printKey);
 }
