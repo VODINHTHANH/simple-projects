@@ -672,7 +672,7 @@ public:
         }
         Node *add(K key, V value)
         {
-            if (isPresent(root, key) != true)
+            if (isPresent(root, key) != NULL)
                 throw "Duplicate key";
             Entry *entry = new Entry(key, value);
             return add(entry);
