@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photos Collection</title>
+    <title>Anime Photos Collection</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;1,100;1,200;1,300;1,400&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="./img/eren_yeager.png">
     <style>
         * {
             margin: 0px;
@@ -24,7 +25,7 @@
             background-color: white;
             margin: auto;
             width: 70%;
-            box-shadow: 0px 0px 50px #cab3b39c;
+            box-shadow: 0px 0px 50px #635a5a9c;
         }
         
         h1 {
@@ -73,6 +74,53 @@
         a:active {
             color: black;
         }
+        
+        #begin-main {
+            margin-top: -6px;
+            background-color: rgba(10, 10, 10, 0.801);
+            height: 10vh;
+            line-height: 4.5vh;
+            font-weight: 200;
+            display: flex;
+            justify-content: space-around;
+            padding: 17px;
+        }
+        
+        #begin-main h3 {
+            color: white;
+            width: 120px;
+            border-left: 1px dotted white;
+            border-right: 1px dotted white;
+            text-align: center;
+        }
+        
+        figure img {
+            width: 100%;
+        }
+        
+        figcaption {
+            margin-top: -5.5px;
+            text-align: center;
+            background-color: rgba(105, 102, 102, 0.301);
+        }
+        
+        span {
+            font-weight: bolder;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 10vh;
+            margin-bottom: 10vh;
+            line-height: 2em;
+        }
+        
+        #contact {
+            margin-bottom: 5vh;
+            font-size: 48px;
+            font-weight: 700;
+            color: rgba(0, 0, 0, 0.459);
+        }
     </style>
 </head>
 
@@ -80,16 +128,55 @@
     <div class="page">
         <header>
             <section id="heading-text">
-                <h1>ACME PHOTOGRAPHY</h1>
-                <h3>Beautiful Natural Photography</h3>
-                <a href="#our-work">View Work</a>
+                <h1>Anime Photos Collection</h1>
+                <h3>It is art</h3>
+                <a href="#begin-main">View Work</a>
             </section>
             <section id="heading-img">
                 <img src="./img/senpai.jpg" alt="senpai">
             </section>
         </header>
-
+        <main>
+            <section id="begin-main">
+                <h3>My Photos</h3>
+            </section>
+            <section id="images">
+                <figure>
+                    <img src="./img/sasuke.png" alt="sasuke">
+                    <br />
+                    <figcaption>
+                        <p><span>Character</span> : Sasuke.</p>
+                        <p><span>Anime</span>: Naruto Shippuden.</p>
+                        <p><span>Context</span>: Sasuke detemined to start a revolution.</p>
+                    </figcaption>
+                </figure>
+                <figure>
+                    <img src="./img/rei-ayanami.png" alt="rei ayanami">
+                    <br />
+                    <figcaption>
+                        <p><span>Character</span> : Ayanami Rei.</p>
+                        <p><span>Anime</span>: Neon Genesis Evangelion.</p>
+                        <p><span>Context</span>: Rei was saved by Shinji.</p>
+                    </figcaption>
+                </figure>
+                <figure>
+                    <img src="./img/reiner-reveal.png" alt="reiner">
+                    <br />
+                    <figcaption>
+                        <p><span>Character</span> : Reiner.</p>
+                        <p><span>Anime</span>: Attack On Titan.</p>
+                        <p><span>Context</span>: Reiner reveals his identity.</p>
+                    </figcaption>
+                </figure>
+            </section>
+        </main>
     </div>
+    <footer>
+        <h1 id="contact">Get In Touch</h1>
+        <p>Email or call us to set up a consult</p>
+        <p>Email: contact@acmephotos.test</p>
+        <p>Phone: (617) 555-5555</p>
+    </footer>
 </body>
 
 </html>
