@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey Form</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;1,100;1,200;1,300;1,400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .page .form h1 {
+            font-size: 20px;
+            text-align: center;
+            font-weight: 600;
+            margin-top: 30px;
+        }
+        
+        .page {
+            background-color: rgba(221, 214, 114, 0.342);
+            margin: 20px 10px 10px 10px;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .form {
+            width: 70vw;
+            display: inline-block;
+            background-color: rgb(255, 255, 255);
+            margin: 30px 30px 30px 30px;
+            line-height: 8vh;
+            padding: 5vh 5vh 5vh 5vh;
+            border-radius: 30px;
+        }
+        
+        fieldset {
+            margin: 5px;
+            margin-top: 10px;
+            border: 0.5px solid rgba(35, 36, 15, 0.144);
+        }
+        
+        .fieldset {
+            margin-left: 20px;
+        }
+        
+        .radio {
+            line-height: 6vh;
+        }
+        
+        legend {
+            font-weight: bolder;
+        }
+        
+        button {
+            background-color: red;
+        }
+        
+        #submit {
+            background-color: red;
+            display: inline-block;
+            margin: 10px auto 10px 26vw;
+            width: 200px;
+            height: 65px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <div class="form">
+            <h1>Application For Permission To Date My Daughter</h1>
+            <p><b>Note: </b> Form is to be completed at least 21 days prior to date</p>
+            <form action="http://www.example.com/review.php" method="get">
+                <fieldset>
+                    <legend class="fieldset">Personal Details</legend>
+                    <label class="fieldset">
+                    Name:
+                    <input type="text"  name="name" size="24" maxlength="100" placeholder="Enter name here">
+                    </label> <br/>
+                    <label class="fieldset">
+                    Adress:
+                    <input type="text"  name="adress" size="24" maxlength="100" placeholder="Enter adress here">
+                    </label> <br>
+                    <label class="fieldset">
+                    Email:
+                    <input type="email"  name="email" size="24" maxlength="100" placeholder="Enter email here">
+                    </label><br>
+                    <label class="fieldset">
+                    Phone Number:
+                    <input type="number"  name="phone-number" size="24" maxlength="9" placeholder="Enter phone number here">
+                    </label><br>
+                    <label class="fieldset">
+                    IQ:
+                    <input type="number"  name="iq" size="24" maxlength="3" placeholder="Enter iq here">
+                    </label> <br>
+                    <div class="fieldset radio">
+                        <p>Gender</p>
+                        <input type="radio" id="male" name="gender" value="male">
+                        <label for="male">Male</label><br>
+                        <input type="radio" id="female" name="gender" value="female">
+                        <label for="female">Female</label><br>
+                        <input type="radio" id="other" name="gender" value="other">
+                        <label for="other">Other</label>
+                    </div>
+                    <label for="date" class="fieldset">
+                        Date of Proposed Outing:
+                        <input type="date" name="date" id="date">
+                    </label>
+                </fieldset>
+                <fieldset>
+                    <div class="fieldset">
+                        <p>Check All That Apply</p>
+                        <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                        <label for="vehicle1"> I have tattoos and/or piercings</label><br>
+                        <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
+                        <label for="vehicle2"> I am more than 2 years older than my daughter</label><br>
+                        <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat" checked>
+                        <label for="vehicle3"> I own a panel van or V8 ute</label><br></div>
+                </fieldset>
+                <fieldset>
+                    <div class="fieldset">
+                        <label for="politic">Political Persuasion:</label>
+                        <select name="politic" id="politic">
+                        <option value="left wing">left wing</option>
+                        <option value="north wing">north wing</option>
+                        <option value="mercedes">Mercedes</option>
+                        <option value="nazi">nazi</option>
+                    </select>
+                        <label for="Education">Education Level Completed: </label>
+                        <select name="Education" id="Education">
+                        <option value="university">University</option>
+                        <option value="college">College</option>
+                        <option value="high school">High school/option>
+                        <option value="none">None</option>
+                    </select>
+                    </div>
+                </fieldset>
+                <fieldset>
+
+                    <legend class="fieldset">Essay Section</legend>
+                    <div class="fieldset">
+                        <p>In 50 words or more explain why you want to date my daughter</p>
+                        <textarea name="user_message" rows="4" cols="50" placeholder="Enter Text Here"></textarea>
+                        <p>Please upload contact details for 2 references</p>
+                        <textarea name="user_message" rows="4" cols="50" placeholder="Enter Text Here"></textarea>
+                        <p>Upload Police Clearance Certificate, Bank Statement and Medical Certifiates here: <button>Attach File</button></p>
+                    </div>
+                </fieldset>
+                <input id="submit" type="submit" value="Send your Application">
+            </form>
+
+        </div>
+
+    </div>
+</body>
+
+</html>
