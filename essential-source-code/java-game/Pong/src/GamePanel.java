@@ -85,7 +85,7 @@ public class GamePanel extends JPanel implements Runnable {
 				ball.yVelocity--;
 			}
 			ball.setXDirection(-ball.xVelocity);
-			ball.setYDirection(-ball.yVelocity);
+			ball.setYDirection(ball.yVelocity);
 		}
 		
 		
@@ -115,13 +115,11 @@ public class GamePanel extends JPanel implements Runnable {
 			score.player2++;
 			newPaddles();
 			newBall();
-			System.out.println("Player2: " + score.player2);
 		}
 		if(ball.x >= GAME_WIDTH-BALL_DIAMETER) {
 			score.player1++;
 			newPaddles();
 			newBall();
-			System.out.println("Player1: " + score.player1);
 		}
 	}
 	
