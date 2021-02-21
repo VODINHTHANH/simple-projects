@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=\, initial-scale=1.0">
+    <title>WEBDEV CREATIONS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: Century Gothic;
+            box-sizing: border-box;
+        }
+        
+        header {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(../img/rengoku.png);
+            height: 100vh;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        ul {
+            list-style-type: none;
+            float: right;
+            margin-top: 25px;
+        }
+        
+        ul li {
+            display: inline-block;
+        }
+        
+        ul li a {
+            text-decoration: none;
+            color: white;
+            padding: 5px 20px;
+            border: 1px solid transparent;
+            transition: 0.6s ease;
+        }
+        
+        ul li a:hover {
+            background-color: white;
+            color: #000;
+        }
+        
+        ul li.active a {
+            background-color: white;
+            color: #000;
+        }
+        
+        .logo img {
+            float: left;
+            width: 150px;
+            height: auto;
+        }
+        
+        .main {
+            max-width: 1200px;
+            margin: auto;
+        }
+        
+        .title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .title h1 {
+            color: white;
+            font-size: 60px;
+        }
+        
+        .button {
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .btn {
+            border: 1px solid #fff;
+            padding: 10px 30px;
+            color: white;
+            text-decoration: none;
+            transition: 0.6s ease;
+        }
+        
+        .btn:hover {
+            background-color: #fff;
+            color: #000;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="main">
+            <div class="logo">
+                <img src="../img/kimetsu-logo.png" alt="logo">
+            </div>
+            <ul>
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">Gallery</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+            <div class="title">
+                <h1>WEBDEB CREATIONS</h1>
+            </div>
+            <div class="button">
+                <a href="#" class="btn">WATCH VIDEO</a>
+                <a href="#" class="btn">LEARN MORE</a>
+            </div>
+        </div>
+    </header>
+</body>
+
+</html>
