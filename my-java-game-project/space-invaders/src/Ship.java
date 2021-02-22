@@ -7,7 +7,6 @@ public class Ship extends Rectangle {
 
 	int xVelocity;
 	int speed = 10;
-	public static boolean isSuspended = false;
 	public ArrayList<Bullet> arr = new ArrayList<Bullet>();
 	public int zo = 0;
 	public double a[] = new double[2];
