@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: Century Gothic;
+            box-sizing: border-box;
+        }
+        
+        .header {
+            height: 75vh;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(../img/rengoku.png);
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .in {
+            width: 60vw;
+            text-align: center;
+            line-height: 6em;
+            color: white;
+        }
+        
+        .in p {
+            line-height: 2em;
+        }
+        
+        .in a {
+            text-decoration: none;
+            color: white;
+            padding: 3.2vh 6.4vh;
+            border: 0.5px solid white;
+            background-color: rgba(114, 110, 110, 0.384);
+        }
+        
+        .in a:hover {
+            text-decoration: none;
+            color: black;
+            padding: 3.2vh 6.4vh;
+            border: 0.5px solid white;
+            background-color: rgba(211, 202, 202, 0.616);
+        }
+        
+        .introduce {
+            background-color: rgba(146, 140, 140, 0.61);
+            height: 35vh;
+        }
+        
+        .intro-text {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .intro-text1 {
+            width: 35vw;
+            height: 20vh;
+            margin-right: 6.4vh;
+        }
+        
+        .intro-text2 {
+            width: 35vw;
+            height: 20vh;
+        }
+        
+        .introduce h2 {
+            padding-top: 3.2vh;
+            padding-bottom: 3.2vh;
+            text-align: center;
+        }
+        
+        .aspect {
+            display: flex;
+            height: 90vh;
+            background-color: rgba(17, 16, 16, 0.658);
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .aspect1 {
+            width: 40vh;
+            background-color: white;
+            margin: 6.4vh;
+            margin-right: 0px;
+            min-width: 250px;
+        }
+        
+        .aspect2 {
+            background-color: white;
+            width: 40vh;
+            margin: 6.4vh;
+        }
+        
+        .aspect3 {
+            background-color: white;
+            width: 40vh;
+            margin-top: 6.4vh;
+            margin-bottom: 6.4vh;
+        }
+        
+        img {
+            overflow: hidden;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .aspect-text1 {
+            padding-top: 8vh;
+            padding-left: 4vh;
+            padding-right: 4vh;
+        }
+        
+        .aspect-text2 {
+            padding-top: 8vh;
+            padding-left: 4vh;
+            padding-right: 4vh;
+        }
+        
+        .aspect-text3 {
+            padding-top: 8vh;
+            padding-left: 4vh;
+            padding-right: 4vh;
+        }
+        
+        .aspect-text1 h3 {
+            margin-bottom: 6.4vh;
+        }
+        
+        .aspect-text1 p {
+            line-height: 1.5em;
+        }
+        
+        .aspect-text2 h3 {
+            margin-bottom: 6.4vh;
+        }
+        
+        .aspect-text2 p {
+            line-height: 1.5em;
+        }
+        
+        .aspect-text3 h3 {
+            margin-bottom: 6.4vh;
+        }
+        
+        .aspect-text3 p {
+            line-height: 1.5em;
+        }
+        
+        .claim {
+            height: 30vh;
+            text-align: center;
+            margin-top: 9.6vh;
+        }
+        
+        .claim h3 {
+            font-size: 4vh;
+            color: rgba(0, 0, 0, 0.712);
+        }
+        
+        .claim p {
+            padding: 8vh 24vh;
+        }
+        
+        .contact-about {
+            min-height: 300px;
+            display: flex;
+            text-align: center;
+        }
+        
+        .contact {
+            background-color: rgba(67, 48, 245, 0.74);
+            flex: 1;
+            color: white;
+        }
+        
+        .contact h2 {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+        
+        .contact p {
+            padding-left: 50px;
+            padding-right: 50px;
+            padding-bottom: 30px;
+        }
+        
+        .about {
+            flex: 1;
+            background-color: rgba(15, 9, 9, 0.452);
+            color: white;
+        }
+        
+        .about h2 {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+        
+        .about p {
+            padding-left: 50px;
+            padding-right: 50px;
+            padding-bottom: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="in">
+            <h1>Welcome to Acme Web Solutions</h1>
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tenetur architecto numquam sit facilis eveniet at quaerat, aut quia quam delectus.</p>
+            <a href="#">Read More</a>
+        </div>
+    </div>
+    <div class="introduce">
+        <h2>Web & Application Development</h2>
+        <div class="intro-text">
+            <div class="intro-text1">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus nisi unde libero dolor eligendi possimus quas. Perferendis adipisci in aspernatur quam alias qui. Tempora facilis necessitatibus, ut error maxime totam.</p>
+            </div>
+            <div class="intro-text2">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus nisi unde libero dolor eligendi possimus quas. Perferendis adipisci in aspernatur quam alias qui. Tempora facilis necessitatibus, ut error maxime totam.</p>
+            </div>
+        </div>
+    </div>
+    <div class="aspect">
+        <div class="aspect1">
+            <div class="pic1">
+                <img src="../img/sasuke.png" alt="sasuke">
+            </div>
+            <div class="aspect-text1">
+                <h3>Web Development</h3>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel repudiandae quis culpa ab, autem aut ipsam aspernatur voluptate rerum quos?</p>
+            </div>
+        </div>
+        <div class="aspect2">
+            <div class="pic2"><img src="../img/eren-disappointmennt.png" alt="sasuke"></div>
+            <div class="aspect-text2">
+                <h3>Mobile Applications</h3>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel repudiandae quis culpa ab, autem aut ipsam aspernatur voluptate rerum quos?</p>
+            </div>
+        </div>
+        <div class="aspect3">
+            <div class="pic3"><img src="../img/angle.png" alt="sasuke"></div>
+            <div class="aspect-text3">
+                <h3>Tech Marketing</h3>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel repudiandae quis culpa ab, autem aut ipsam aspernatur voluptate rerum quos?</p>
+            </div>
+        </div>
+    </div>
+    <div class="claim">
+        <h3>We handle all of your digital needs</h3>
+        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptates, inventore! Error aliquid saepe tenetur incidunt quaerat quos officiis explicabo harum.</p>
+    </div>
+    <div class="contact-about">
+        <div class="contact">
+            <h2>Contact Us</h2>
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. C.</p>
+            <p>contact@acmewebsolutions.test</p>
+        </div>
+        <div class="about">
+            <h2>About Company</h2>
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequatur illo dolorum id asperiores laboriosam sapiente architecto magnam, et voluptatibus saepe.</p>
+        </div>
+    </div>
+</body>
+
+</html>
