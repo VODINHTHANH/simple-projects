@@ -11,16 +11,12 @@ public class NormalEnemy extends Rectangle {
 	
 	NormalEnemy(int x, int y, int WIDTH, int HEIGHT) {
 		super(x,y,WIDTH,HEIGHT);
-		yVelocity = 2;
+		yVelocity = 3;
 	}
 	public void move() {
 		if(GamePanel.timerForEnemy % 20 == 0) {
 			y += yVelocity;
 		}
-		
-	}
-	
-	public void newBullet() {
 		
 	}
 	

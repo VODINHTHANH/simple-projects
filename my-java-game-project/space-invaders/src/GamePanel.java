@@ -13,6 +13,7 @@ public class GamePanel extends JPanel implements Runnable {
 	static final int BULLET_HEIGHT = 25;
 	static final int NEnemy_WIDTH = 25;
 	static final int NEnemy_HEIGHT = 25;
+	static State state;
 
 	static double timer = 0.0;
 	static int timerForEnemy = 0;
@@ -27,6 +28,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 	GamePanel() {
 		random = new Random();
+		state = State.Game;
 		normalEnemyList = new ArrayList<NormalEnemy>();
 		enemyBulletList = new ArrayList<EnemyBullet>();
 		newShip();
@@ -55,18 +57,20 @@ public class GamePanel extends JPanel implements Runnable {
 	}
 
 	public void move() {
-		ship.move();
-		for (int i = 0; i < ship.arr.size(); i++) {
-			ship.arr.get(i).move();
-		}
-		if (!normalEnemyList.isEmpty()) {
-			for (NormalEnemy nor : normalEnemyList) {
-				nor.move();
+		if (state == State.Game) {
+			ship.move();
+			for (int i = 0; i < ship.arr.size(); i++) {
+				ship.arr.get(i).move();
 			}
-		}
-		if (!enemyBulletList.isEmpty()) {
-			for (EnemyBullet enemyBullet : enemyBulletList) {
-				enemyBullet.move();
+			if (!normalEnemyList.isEmpty()) {
+				for (NormalEnemy nor : normalEnemyList) {
+					nor.move();
+				}
+			}
+			if (!enemyBulletList.isEmpty()) {
+				for (EnemyBullet enemyBullet : enemyBulletList) {
+					enemyBullet.move();
+				}
 			}
 		}
 	}
@@ -101,6 +105,10 @@ public class GamePanel extends JPanel implements Runnable {
 			}
 		}
 		for (EnemyBullet b : enemyBulletList) {
+			if (b.intersects(ship)) {
+				state = State.GameOver;
+				break;
+			}
 			if (b.y > GAME_HEIGHT) {
 				enemyBulletList.remove(b);
 				break;
@@ -117,26 +125,46 @@ public class GamePanel extends JPanel implements Runnable {
 				}
 			}
 		}
+		for (NormalEnemy b : normalEnemyList) {
+			if (b.y > GAME_HEIGHT) {
+				normalEnemyList.remove(b);
+				if (normalEnemyList.isEmpty())
+					state = State.GameOver;
+				break;
+			}
+		}
+		for (NormalEnemy b : normalEnemyList) {
+			if (b.intersects(ship)) {
+				state = State.GameOver;
+				break;
+			}
+		}
 
 	}
 
 	public void draw(Graphics g) {
-		ship.draw(g);
-		for (int i = 0; i < ship.arr.size(); i++) {
-			ship.arr.get(i).draw(g);
-		}
-		for (NormalEnemy nor : normalEnemyList) {
-			nor.draw(g);
-		}
-		if (timerForEnemy % 20 == 0) {
-			if (!normalEnemyList.isEmpty()) {
-				NormalEnemy temp = normalEnemyList.get(random.nextInt(normalEnemyList.size()));
-				enemyBulletList.add(new EnemyBullet(temp.x + BULLET_WIDTH / 2, temp.y + BULLET_HEIGHT / 2, BULLET_WIDTH,
-						BULLET_HEIGHT));
+		if (state == State.Game) {
+			ship.draw(g);
+			for (int i = 0; i < ship.arr.size(); i++) {
+				ship.arr.get(i).draw(g);
 			}
-		}
-		for (EnemyBullet enemyBullet : enemyBulletList) {
-			enemyBullet.draw(g);
+			for (NormalEnemy nor : normalEnemyList) {
+				nor.draw(g);
+			}
+			if (timerForEnemy % 20 == 0) {
+				if (!normalEnemyList.isEmpty()) {
+					NormalEnemy temp = normalEnemyList.get(random.nextInt(normalEnemyList.size()));
+					enemyBulletList.add(new EnemyBullet(temp.x + BULLET_WIDTH / 2, temp.y + BULLET_HEIGHT / 2,
+							BULLET_WIDTH, BULLET_HEIGHT));
+				}
+			}
+			for (EnemyBullet enemyBullet : enemyBulletList) {
+				enemyBullet.draw(g);
+			}
+		} else if (state == State.GameOver) {
+			g.setColor(Color.red);
+			g.setFont(new Font("Ink Free", Font.BOLD, 40));
+			g.drawString("Game Over", GAME_WIDTH / 2 - 100, GAME_HEIGHT / 2);
 		}
 	}
 
