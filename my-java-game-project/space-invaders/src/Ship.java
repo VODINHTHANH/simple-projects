@@ -10,6 +10,7 @@ public class Ship extends Rectangle {
 	public ArrayList<Bullet> arr = new ArrayList<Bullet>();
 	public int zo = 0;
 	public double a[] = new double[2];
+	private boolean workSameTime[] = new boolean[3];
 
 	Ship(int x, int y, int SHIP_WIDTH, int SHIP_HEIGHT) {
 		super(x, y, SHIP_WIDTH, SHIP_HEIGHT);
@@ -24,29 +25,37 @@ public class Ship extends Rectangle {
 		if (e.getKeyCode() == KeyEvent.VK_A) {
 			setXDirection(-speed);
 			move();
+			workSameTime[0] = true;
 		}
 		if (e.getKeyCode() == KeyEvent.VK_D) {
 			setXDirection(speed);
 			move();
+			workSameTime[1] = true;
 		}
 		if (e.getKeyCode() == KeyEvent.VK_W) {
+			workSameTime[2] = true;
 			a[1] = GamePanel.timer;
 			if(a[1]-a[0] > 0.1) {
 				newBullet();
 				a[0]=a[1];
 			}
-
+			
 		}
 	}
 
 	public void keyReleased(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_A) {
-			setXDirection(0);
 			move();
+			workSameTime[0] = false;
+			if(workSameTime[0] == false && workSameTime[1] == false) setXDirection(0);
 		}
 		if (e.getKeyCode() == KeyEvent.VK_D) {
-			setXDirection(0);
 			move();
+			workSameTime[1] = false;
+			if(workSameTime[0] == false && workSameTime[1] == false) setXDirection(0);
+		}
+		if (e.getKeyCode() == KeyEvent.VK_W) {
+			workSameTime[2] = false;
 		}
 
 	}

@@ -23,12 +23,14 @@ public class GamePanel extends JPanel implements Runnable {
 	Graphics graphics;
 	Random random;
 	Ship ship;
-	ArrayList<NormalEnemy> normalEnemyList;
-	ArrayList<EnemyBullet> enemyBulletList;
+	static ArrayList<NormalEnemy> normalEnemyList;
+	static ArrayList<EnemyBullet> enemyBulletList;
+	MenuSystem menu;
 
 	GamePanel() {
+		menu = new MenuSystem();
 		random = new Random();
-		state = State.Game;
+		state = State.Menu;
 		normalEnemyList = new ArrayList<NormalEnemy>();
 		enemyBulletList = new ArrayList<EnemyBullet>();
 		newShip();
@@ -42,13 +44,14 @@ public class GamePanel extends JPanel implements Runnable {
 
 		this.setFocusable(true);
 		this.addKeyListener(new AL());
+		this.addMouseListener(new Mouse());
 		this.setPreferredSize(SCREEN_SIZE);
 
 		gameThread = new Thread(this);
 		gameThread.start();
 	}
 
-	public NormalEnemy newNormalEnemy(int x, int y) {
+	public static NormalEnemy newNormalEnemy(int x, int y) {
 		return new NormalEnemy(x, y, NEnemy_WIDTH, NEnemy_HEIGHT);
 	}
 
@@ -75,16 +78,6 @@ public class GamePanel extends JPanel implements Runnable {
 		}
 	}
 
-	public class AL extends KeyAdapter {
-		public void keyPressed(KeyEvent e) {
-			ship.keyPressed(e);
-		}
-
-		public void keyReleased(KeyEvent e) {
-			ship.keyReleased(e);
-		}
-	}
-
 	public void paint(Graphics g) {
 		image = createImage(getWidth(), getHeight());
 		graphics = image.getGraphics();
@@ -104,6 +97,7 @@ public class GamePanel extends JPanel implements Runnable {
 				break;
 			}
 		}
+		// check ship collide with bullet
 		for (EnemyBullet b : enemyBulletList) {
 			if (b.intersects(ship)) {
 				state = State.GameOver;
@@ -162,9 +156,72 @@ public class GamePanel extends JPanel implements Runnable {
 				enemyBullet.draw(g);
 			}
 		} else if (state == State.GameOver) {
+			gameOver();
 			g.setColor(Color.red);
 			g.setFont(new Font("Ink Free", Font.BOLD, 40));
 			g.drawString("Game Over", GAME_WIDTH / 2 - 100, GAME_HEIGHT / 2);
+			// top line
+			g.drawLine(200, 320, 400, 320);
+			// left line
+			g.drawLine(200, 320, 200, 370);
+			// right line
+			g.drawLine(400, 320, 400, 370);
+			// bottom line
+			g.drawLine(200, 370, 400, 370);
+			g.setColor(Color.green);
+			g.drawString("Play again", 210, 355);
+		} else if (state == State.Menu) {
+			g.setColor(Color.white);
+			g.setFont(new Font("Ink Free", Font.BOLD, 60));
+			//play button
+			g.drawString("Play", GAME_WIDTH / 2 - 70, 200);
+			// top line
+			g.drawLine(200, 150, 380, 150);
+			// bottom line
+			g.drawLine(200, 220, 380, 220);
+			// left line
+			g.drawLine(200, 150, 200, 220);
+			// right line
+			g.drawLine(380, 150, 380, 220);
+			//Exit button
+			g.drawString("Exit", GAME_WIDTH / 2 - 70, 400);
+			int x1 = 200;// x1
+			int x2 = 350;// y1
+			int y1 = 380;// x2
+			int y2 = 420;// y2
+			//top line
+			g.drawLine(x1, x2, y1, x2);
+			// bottom line
+			g.drawLine(x1, y2, y1, y2);
+			// left line
+			g.drawLine(x1, x2, x1, y2);
+			// right line
+			g.drawLine(y1, x2, y1, y2);
+
+		}
+	}
+
+	public void gameOver() {
+		normalEnemyList.clear();
+		enemyBulletList.clear();
+		ship.arr.clear();
+		
+	}
+
+	// key input
+	public class AL extends KeyAdapter {
+		public void keyPressed(KeyEvent e) {
+			ship.keyPressed(e);
+		}
+
+		public void keyReleased(KeyEvent e) {
+			ship.keyReleased(e);
+		}
+	}
+
+	public class Mouse extends MouseAdapter {
+		public void mousePressed(MouseEvent e) {
+			menu.mousePressed(e);
 		}
 	}
 

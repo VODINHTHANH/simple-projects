@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+    <title>Great Shoes inc.</title>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            font-family: 'Noto Sans JP', sans-serif;
+            line-height: 1.6;
+        }
+        
+        img {
+            max-width: 100%;
+            display: block;
+        }
+        
+        h1,
+        h2,
+        h3,
+        p {
+            margin: 0;
+        }
+        
+        section {
+            padding: 7em 0;
+        }
+        
+        .container {
+            width: 85%;
+            max-width: 65em;
+            margin: 0 auto;
+        }
+        
+        .split {
+            display: flex;
+            gap: 1em;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .split>* {
+            flex-basis: 30%;
+            min-width: 15rem;
+        }
+        
+        .spacing>*+* {
+            margin-top: var(--spacer, 2rem)
+        }
+        
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            color: var(--clr-text, #fff);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 1.125rem;
+            padding: .5em 1.25em;
+            background: var(--clr-accent, blue);
+            border-radius: .25em;
+            transition: transform 250ms ease-in-out, opacity 250ms linear;
+        }
+        
+        .btn:hover,
+        .btn:focus {
+            transform: scale(1.1);
+            opacity: .9;
+        }
+        
+        .primary-title {
+            font-size: 4rem;
+            font-size: clamp(3rem, calc(5vw + 1rem), 4.5rem);
+            line-height: 1;
+            text-transform: uppercase;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: clamp(2.5rem, calc(5vw + 1rem), 4rem);
+            line-height: 1;
+            color: #17353d;
+        }
+        
+        .hero {
+            color: white;
+            text-align: center;
+            padding: 15em 0;
+            /* background-color: #222; */
+            background-image: url(../img/shoe-3.png), radial-gradient(#444, #111);
+            background-blend-mode: multiply;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="hero">
+        <div class="container spacing">
+            <h1 class="primary-title">Amazing shoes at an amazing price</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam, omnis!</p>
+            <a href="#" class="btn">See what we have</a>
+        </div>
+    </header>
+    <main>
+        <section class="featured">
+            <div class="container">
+                <h2 class="section-title">Featured products</h2>
+                <div class="split">
+                    <a href="#" class="featured__item">
+                        <img src="../img/shoe-4.png" alt="" class="featured__img">
+                        <p class="featured__details"></p>
+                    </a>
+                    <a href="#" class="featured__item">
+                        <img src="../img/shoe-5.png" alt="" class="featured__img">
+                        <p class="featured__details"></p>
+                    </a>
+                    <a href="#" class="featured__item">
+                        <img src="../img/shoe-6.png" alt="" class="featured__img">
+                        <p class="featured__details"></p>
+                    </a>
+                </div>
+            </div>
+        </section>
+        <section class="our-products">
+            <div class="container">
+                <h2 class="section-title">Out products</h2>
+                <article class="product">
+                    <img src="../img/shoe-1.png" alt="" class="product__image">
+                    <h3 class="product__title"></h3>
+                    <p class="product__description"></p>
+                    <a href="#" class="btn"></a>
+                </article>
+
+                <article class="product">
+                    <img src="../img/shoe-2.png" alt="" class="product__image">
+                    <h3 class="product__title"></h3>
+                    <p class="product__description"></p>
+                    <a href="#" class="btn"></a>
+                </article>
+
+                <article class="product">
+                    <img src="../img/shoe-3.png" alt="" class="product__image">
+                    <h3 class="product__title"></h3>
+                    <p class="product__description"></p>
+                    <a href="#" class="btn"></a>
+                </article>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>
