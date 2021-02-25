@@ -13,6 +13,8 @@ public class GamePanel extends JPanel implements Runnable {
 	static final int BULLET_HEIGHT = 25;
 	static final int NEnemy_WIDTH = 25;
 	static final int NEnemy_HEIGHT = 25;
+	public static int BOSS_WIDTH = 100;
+	public static int BOSS_HEIGHT = 100;
 	static State state;
 
 	static double timer = 0.0;
@@ -26,8 +28,10 @@ public class GamePanel extends JPanel implements Runnable {
 	static ArrayList<NormalEnemy> normalEnemyList;
 	static ArrayList<EnemyBullet> enemyBulletList;
 	MenuSystem menu;
+	private Boss boss;
 
 	GamePanel() {
+		boss = new Boss((GAME_WIDTH - BOSS_WIDTH)/2, -BOSS_HEIGHT, BOSS_WIDTH, BOSS_HEIGHT);
 		menu = new MenuSystem();
 		random = new Random();
 		state = State.Menu;
@@ -61,20 +65,26 @@ public class GamePanel extends JPanel implements Runnable {
 
 	public void move() {
 		if (state == State.Game) {
+			//move ship and ship bullet
 			ship.move();
 			for (int i = 0; i < ship.arr.size(); i++) {
 				ship.arr.get(i).move();
 			}
+			//normal enemy move
 			if (!normalEnemyList.isEmpty()) {
 				for (NormalEnemy nor : normalEnemyList) {
 					nor.move();
 				}
 			}
+			//normal enemy bullet move
 			if (!enemyBulletList.isEmpty()) {
 				for (EnemyBullet enemyBullet : enemyBulletList) {
 					enemyBullet.move();
 				}
 			}
+			//boss move
+			
+			boss.move();
 		}
 	}
 
@@ -99,15 +109,16 @@ public class GamePanel extends JPanel implements Runnable {
 		}
 		// check ship collide with bullet
 		for (EnemyBullet b : enemyBulletList) {
-			if (b.intersects(ship)) {
-				state = State.GameOver;
-				break;
-			}
+//			if (b.intersects(ship)) {
+//				state = State.GameOver;
+//				break;
+//			}
 			if (b.y > GAME_HEIGHT) {
 				enemyBulletList.remove(b);
 				break;
 			}
 		}
+		// ship bullet collide with normal enemy
 		if (!normalEnemyList.isEmpty()) {
 			OUTER: for (NormalEnemy a : normalEnemyList) {
 				for (Bullet b : ship.arr) {
@@ -119,6 +130,7 @@ public class GamePanel extends JPanel implements Runnable {
 				}
 			}
 		}
+		//if normal Enemy move out of screen
 		for (NormalEnemy b : normalEnemyList) {
 			if (b.y > GAME_HEIGHT) {
 				normalEnemyList.remove(b);
@@ -127,24 +139,31 @@ public class GamePanel extends JPanel implements Runnable {
 				break;
 			}
 		}
+		// if normal enemy collide with ship
 		for (NormalEnemy b : normalEnemyList) {
 			if (b.intersects(ship)) {
 				state = State.GameOver;
 				break;
 			}
 		}
-
+		//check boss collisions
+		if(boss.x == 0 || boss.x == GAME_WIDTH-BOSS_WIDTH) {
+			boss.changeDirection();
+		}
 	}
 
 	public void draw(Graphics g) {
 		if (state == State.Game) {
+			//draw ship and ship bullet
 			ship.draw(g);
 			for (int i = 0; i < ship.arr.size(); i++) {
 				ship.arr.get(i).draw(g);
 			}
+			//draw normal enemy
 			for (NormalEnemy nor : normalEnemyList) {
 				nor.draw(g);
 			}
+			//create bullet at random enemy
 			if (timerForEnemy % 20 == 0) {
 				if (!normalEnemyList.isEmpty()) {
 					NormalEnemy temp = normalEnemyList.get(random.nextInt(normalEnemyList.size()));
@@ -152,6 +171,18 @@ public class GamePanel extends JPanel implements Runnable {
 							BULLET_WIDTH, BULLET_HEIGHT));
 				}
 			}
+			//draw boss 
+			//normalEnemyList.clear();
+			if(normalEnemyList.isEmpty() == true) {
+				boss.appear();
+				boss.draw(g);
+				if(timerForEnemy % 20 == 0) {
+					//enemyBulletList.add(new EnemyBullet(boss.x, boss.y + BOSS_HEIGHT, BULLET_WIDTH, BULLET_HEIGHT));
+					enemyBulletList.add(new EnemyBullet(boss.x+BOSS_WIDTH/2, boss.y + BOSS_HEIGHT, BULLET_WIDTH, BULLET_HEIGHT));
+					//enemyBulletList.add(new EnemyBullet(boss.x+BOSS_WIDTH, boss.y + BOSS_HEIGHT, BULLET_WIDTH, BULLET_HEIGHT));
+				}
+			}
+			//draw enemy bullet
 			for (EnemyBullet enemyBullet : enemyBulletList) {
 				enemyBullet.draw(g);
 			}
@@ -197,8 +228,7 @@ public class GamePanel extends JPanel implements Runnable {
 			g.drawLine(x1, x2, x1, y2);
 			// right line
 			g.drawLine(y1, x2, y1, y2);
-
-		}
+		} 
 	}
 
 	public void gameOver() {
