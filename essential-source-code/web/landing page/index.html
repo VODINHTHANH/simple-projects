@@ -91,6 +91,7 @@
             font-size: clamp(2.5rem, calc(5vw + 1rem), 4rem);
             line-height: 1;
             color: #17353d;
+            margin-bottom: 5rem;
         }
         
         .hero {
@@ -103,6 +104,122 @@
             background-position: center;
             background-repeat: no-repeat;
             background-attachment: fixed;
+        }
+        
+        .featured {
+            background: #eee;
+        }
+        
+        .featured__item {
+            display: block;
+            position: relative;
+            transform: scale(.85);
+            transition: transform 250ms ease-in-out, opacity 250ms linear;
+            text-decoration: none;
+            color: #333;
+            text-align: center;
+            line-height: 1.2;
+        }
+        
+        .featured__item:hover,
+        .featured__item:focus {
+            -webkit-transform: scale(1);
+            transform: scale(1);
+        }
+        
+        .featured__item:hover .featured__details,
+        .featured__item:focus .featured__details {
+            opacity: 1;
+        }
+        
+        .featured__item::after {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            padding: 75% 75% 0 0;
+            border-radius: 50%;
+            background: #2193b0;
+            z-index: -1;
+        }
+        
+        .featured__details {
+            opacity: 0;
+            transition: opacity 250ms linear;
+            text-shadow: 0 0 1em rgba(#fff, 1);
+        }
+        
+        .featured__details span {
+            display: block;
+            font-weight: 700;
+            font-size: 2.5rem;
+        }
+        
+        .product {
+            background: radial-gradient( var(--clr-inner, limegreen), var(--clr-outer, purple));
+            padding: 3em;
+            border-radius: 1em;
+            margin-bottom: 3em;
+            text-align: center;
+        }
+        
+        .product__image {
+            margin: -5em 0 0 0;
+        }
+        
+        @media (min-width: 45em) {
+            .product {
+                text-align: left;
+                margin-bottom: 9em;
+            }
+            .product__image {
+                float: right;
+                width: 65%;
+                /* outline: 2px solid red; */
+                shape-outside: url(../img/shoe-1.png);
+                /* shape-margin: 1em; */
+                margin: 0 -5em 0 0;
+            }
+            .product__title {
+                margin: 0;
+            }
+            .product .shoe-white {
+                background: yellow;
+            }
+            .product .shoe-white .product__image {
+                float: left;
+                shape-outside: url(../img/shoe-2.png);
+            }
+        }
+        
+        .product__title {
+            font-size: clamp(3rem, calc(5vw + 1rem), 5.5rem);
+            text-transform: uppercase;
+            line-height: 1.1;
+            color: #fff;
+            text-shadow: 0 0 .2em rgba(#000, .2);
+        }
+        
+        .hero {
+            --clr-accent: #faa700;
+        }
+        
+        .shoe-red {
+            --clr-inner: #faa700;
+            --clr-outer: #e48d00;
+            --clr-accent: #a1173c;
+        }
+        
+        .shoe-white {
+            --clr-inner: #fce4b3;
+            --clr-outer: #eac886;
+            --clr-accent: #2f4858;
+        }
+        
+        .shoe-blue {
+            --clr-inner: #6dd5ed;
+            --clr-outer: #2193b0;
+            --clr-accent: #008951;
         }
     </style>
 </head>
@@ -122,15 +239,15 @@
                 <div class="split">
                     <a href="#" class="featured__item">
                         <img src="../img/shoe-4.png" alt="" class="featured__img">
-                        <p class="featured__details"></p>
+                        <p class="featured__details"><span class="price">$99</span> shoes name</p>
                     </a>
                     <a href="#" class="featured__item">
                         <img src="../img/shoe-5.png" alt="" class="featured__img">
-                        <p class="featured__details"></p>
+                        <p class="featured__details"><span class="price">$99</span> shoes name</p>
                     </a>
                     <a href="#" class="featured__item">
                         <img src="../img/shoe-6.png" alt="" class="featured__img">
-                        <p class="featured__details"></p>
+                        <p class="featured__details"><span class="price">$99</span> shoes name</p>
                     </a>
                 </div>
             </div>
@@ -138,25 +255,25 @@
         <section class="our-products">
             <div class="container">
                 <h2 class="section-title">Out products</h2>
-                <article class="product">
+                <article class="product shoe-red spacing">
                     <img src="../img/shoe-1.png" alt="" class="product__image">
-                    <h3 class="product__title"></h3>
-                    <p class="product__description"></p>
-                    <a href="#" class="btn"></a>
+                    <h3 class="product__title">A really nice shoes</h3>
+                    <p class="product__description">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptatem eius minima ullam sed aliquam odit ratione recusandae deleniti cumque fugit.</p>
+                    <a href="#" class="btn">Buy now</a>
                 </article>
 
-                <article class="product">
+                <article class="product shoe-white spacing">
                     <img src="../img/shoe-2.png" alt="" class="product__image">
-                    <h3 class="product__title"></h3>
-                    <p class="product__description"></p>
-                    <a href="#" class="btn"></a>
+                    <h3 class="product__title">A really nice shoes</h3>
+                    <p class="product__description">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptatem eius minima ullam sed aliquam odit ratione recusandae deleniti cumque fugit.</p>
+                    <a href="#" class="btn">Buy now</a>
                 </article>
 
-                <article class="product">
+                <article class="product shoe-blue spacing">
                     <img src="../img/shoe-3.png" alt="" class="product__image">
-                    <h3 class="product__title"></h3>
-                    <p class="product__description"></p>
-                    <a href="#" class="btn"></a>
+                    <h3 class="product__title">A really nice shoes</h3>
+                    <p class="product__description">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptatem eius minima ullam sed aliquam odit ratione recusandae deleniti cumque fugit.</p>
+                    <a href="#" class="btn">Buy now</a>
                 </article>
             </div>
         </section>
