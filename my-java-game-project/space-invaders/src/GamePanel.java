@@ -11,10 +11,12 @@ public class GamePanel extends JPanel implements Runnable {
 	static final int SHIP_HEIGHT = 50;
 	static final int BULLET_WIDTH = 10;
 	static final int BULLET_HEIGHT = 25;
-	static final int NEnemy_WIDTH = 25;
+	static final int NEnemy_WIDTH = 25; //Normal enemy
 	static final int NEnemy_HEIGHT = 25;
 	public static int BOSS_WIDTH = 100;
 	public static int BOSS_HEIGHT = 100;
+	public static int BOSS_BULLET_WIDTH = 10;
+	public static int BOSS_BULLET_HEIGHT = 10;
 	static State state;
 
 	static double timer = 0.0;
@@ -27,11 +29,16 @@ public class GamePanel extends JPanel implements Runnable {
 	Ship ship;
 	static ArrayList<NormalEnemy> normalEnemyList;
 	static ArrayList<EnemyBullet> enemyBulletList;
+	static ArrayList<Boss> bossList;
+	static ArrayList<BossBullet> bossBulletList;
 	MenuSystem menu;
-	private Boss boss;
+	static BossHealthBar bossHealthBar;
 
 	GamePanel() {
-		boss = new Boss((GAME_WIDTH - BOSS_WIDTH)/2, -BOSS_HEIGHT, BOSS_WIDTH, BOSS_HEIGHT);
+		bossList = new ArrayList<Boss>();
+		bossBulletList = new ArrayList<BossBullet>();
+		bossList.add(new Boss((GAME_WIDTH - BOSS_WIDTH) / 2, -BOSS_HEIGHT, BOSS_WIDTH, BOSS_HEIGHT));
+		bossHealthBar = new BossHealthBar(bossList.get(0));
 		menu = new MenuSystem();
 		random = new Random();
 		state = State.Menu;
@@ -40,9 +47,9 @@ public class GamePanel extends JPanel implements Runnable {
 		newShip();
 		for (int i = 0; i < GAME_WIDTH; i++) {
 			if (i % 60 == 0) {
-				normalEnemyList.add(newNormalEnemy(i, 20));
-				normalEnemyList.add(newNormalEnemy(i, 60));
-				normalEnemyList.add(newNormalEnemy(i, 100));
+				normalEnemyList.add(newNormalEnemy(i + 15, 20));
+				normalEnemyList.add(newNormalEnemy(i + 15, 60));
+				normalEnemyList.add(newNormalEnemy(i + 15, 100));
 			}
 		}
 
@@ -65,26 +72,29 @@ public class GamePanel extends JPanel implements Runnable {
 
 	public void move() {
 		if (state == State.Game) {
-			//move ship and ship bullet
+			// move ship and ship bullet
 			ship.move();
 			for (int i = 0; i < ship.arr.size(); i++) {
 				ship.arr.get(i).move();
 			}
-			//normal enemy move
+			// normal enemy move
 			if (!normalEnemyList.isEmpty()) {
 				for (NormalEnemy nor : normalEnemyList) {
 					nor.move();
 				}
 			}
-			//normal enemy bullet move
+			// normal enemy bullet move
 			if (!enemyBulletList.isEmpty()) {
 				for (EnemyBullet enemyBullet : enemyBulletList) {
 					enemyBullet.move();
 				}
 			}
-			//boss move
-			
-			boss.move();
+			// boss move
+			if (!bossList.isEmpty())
+				bossList.get(0).move();
+			for(BossBullet b : bossBulletList) {
+				b.move();
+			}
 		}
 	}
 
@@ -96,6 +106,15 @@ public class GamePanel extends JPanel implements Runnable {
 	}
 
 	public void checkCollision() {
+		for(BossBullet b : bossBulletList) {
+			if(b.x == 0 || b.x == GAME_WIDTH-BOSS_BULLET_WIDTH) {
+				b.changeDirection();
+			}
+			if(b.y == GAME_HEIGHT) {
+				bossBulletList.remove(b);
+				break;
+			}
+		}
 		if (ship.x >= GAME_WIDTH - SHIP_WIDTH) {
 			ship.x = GAME_WIDTH - SHIP_WIDTH;
 		} else if (ship.x <= 0) {
@@ -118,8 +137,15 @@ public class GamePanel extends JPanel implements Runnable {
 				break;
 			}
 		}
+		//ship collide with boss bullet
+		for(BossBullet b : bossBulletList) {
+//			if(b.intersects(ship)) {
+//				state= State.GameOver;
+//				break;
+//			}
+		}
 		// ship bullet collide with normal enemy
-		if (!normalEnemyList.isEmpty()) {
+		if (normalEnemyList.isEmpty() == false) {
 			OUTER: for (NormalEnemy a : normalEnemyList) {
 				for (Bullet b : ship.arr) {
 					if (a.intersects(b)) {
@@ -130,7 +156,8 @@ public class GamePanel extends JPanel implements Runnable {
 				}
 			}
 		}
-		//if normal Enemy move out of screen
+
+		// if normal Enemy move out of screen
 		for (NormalEnemy b : normalEnemyList) {
 			if (b.y > GAME_HEIGHT) {
 				normalEnemyList.remove(b);
@@ -146,45 +173,87 @@ public class GamePanel extends JPanel implements Runnable {
 				break;
 			}
 		}
-		//check boss collisions
-		if(boss.x == 0 || boss.x == GAME_WIDTH-BOSS_WIDTH) {
-			boss.changeDirection();
+		// check boss collisions
+		//normalEnemyList.clear();
+		if (bossList.isEmpty() == false) {
+			for (Bullet b : ship.arr) {
+				if(b.intersects(bossList.get(0))) {
+					ship.arr.remove(b);
+					int temp = bossList.get(0).getHealth() - 1;
+					bossHealthBar.setCurrentHealth(bossHealthBar.getCurrentHealth()-13);
+					bossList.get(0).setHealth(temp);
+					if(bossList.get(0).getHealth()==0) {
+						state = State.Win;
+					}
+					break;
+				}
+			}
+		}
+		if (!bossList.isEmpty()) {
+			if (bossList.get(0).x == 0 || bossList.get(0).x == GAME_WIDTH - BOSS_WIDTH) {
+				bossList.get(0).changeDirection();
+			}
 		}
 	}
 
 	public void draw(Graphics g) {
 		if (state == State.Game) {
-			//draw ship and ship bullet
+			// draw ship and ship bullet
 			ship.draw(g);
 			for (int i = 0; i < ship.arr.size(); i++) {
 				ship.arr.get(i).draw(g);
 			}
-			//draw normal enemy
+			// draw normal enemy
 			for (NormalEnemy nor : normalEnemyList) {
 				nor.draw(g);
 			}
-			//create bullet at random enemy
-			if (timerForEnemy % 20 == 0) {
+			// create bullet at random enemy
+			if (timerForEnemy % 50 == 0) {
 				if (!normalEnemyList.isEmpty()) {
 					NormalEnemy temp = normalEnemyList.get(random.nextInt(normalEnemyList.size()));
 					enemyBulletList.add(new EnemyBullet(temp.x + BULLET_WIDTH / 2, temp.y + BULLET_HEIGHT / 2,
 							BULLET_WIDTH, BULLET_HEIGHT));
 				}
 			}
-			//draw boss 
-			//normalEnemyList.clear();
-			if(normalEnemyList.isEmpty() == true) {
-				boss.appear();
-				boss.draw(g);
-				if(timerForEnemy % 20 == 0) {
-					//enemyBulletList.add(new EnemyBullet(boss.x, boss.y + BOSS_HEIGHT, BULLET_WIDTH, BULLET_HEIGHT));
-					enemyBulletList.add(new EnemyBullet(boss.x+BOSS_WIDTH/2, boss.y + BOSS_HEIGHT, BULLET_WIDTH, BULLET_HEIGHT));
-					//enemyBulletList.add(new EnemyBullet(boss.x+BOSS_WIDTH, boss.y + BOSS_HEIGHT, BULLET_WIDTH, BULLET_HEIGHT));
+			// draw boss
+			 normalEnemyList.clear();/////////////////////////////////////////////////for testing
+			for (Boss b : bossList) {
+				b.draw(g);
+			}
+			if(bossHealthBar != null) {
+				bossHealthBar.draw(g);
+			}
+			// draw enemy bullet
+			if (normalEnemyList.isEmpty() == true) {
+				if (!bossList.isEmpty()) {
+					bossList.get(0).appear();
+					if (timerForEnemy % 20 == 0) {
+						// enemyBulletList.add(new EnemyBullet(boss.x, boss.y + BOSS_HEIGHT,
+						// BULLET_WIDTH, BULLET_HEIGHT));
+						enemyBulletList.add(new EnemyBullet(bossList.get(0).x + BOSS_WIDTH / 2,
+								bossList.get(0).y + BOSS_HEIGHT, BULLET_WIDTH, BULLET_HEIGHT));
+						// enemyBulletList.add(new EnemyBullet(boss.x+BOSS_WIDTH, boss.y + BOSS_HEIGHT,
+						// BULLET_WIDTH, BULLET_HEIGHT));
+					}
 				}
 			}
-			//draw enemy bullet
 			for (EnemyBullet enemyBullet : enemyBulletList) {
 				enemyBullet.draw(g);
+			}
+			if(!bossList.isEmpty()) {
+				if(bossList.get(0).x == 0 || bossList.get(0).x == GAME_WIDTH-BOSS_WIDTH) {
+					if(bossList.get(0).x == 0) {
+						bossBulletList.add(new BossBullet(bossList.get(0).x+BOSS_WIDTH, bossList.get(0).y + BOSS_WIDTH, BOSS_BULLET_WIDTH, BOSS_BULLET_WIDTH));
+						enemyBulletList.add(new EnemyBullet(0, 0, BULLET_WIDTH, BULLET_HEIGHT));
+					} else {
+						bossBulletList.add(new BossBullet(bossList.get(0).x, bossList.get(0).y + BOSS_WIDTH, BOSS_BULLET_WIDTH, BOSS_BULLET_WIDTH));
+						enemyBulletList.add(new EnemyBullet(GAME_WIDTH-BULLET_WIDTH, 0, BULLET_WIDTH, BULLET_HEIGHT));
+					}
+					
+				}
+			}
+			for(BossBullet b : bossBulletList) {
+				b.draw(g);
 			}
 		} else if (state == State.GameOver) {
 			gameOver();
@@ -204,7 +273,7 @@ public class GamePanel extends JPanel implements Runnable {
 		} else if (state == State.Menu) {
 			g.setColor(Color.white);
 			g.setFont(new Font("Ink Free", Font.BOLD, 60));
-			//play button
+			// play button
 			g.drawString("Play", GAME_WIDTH / 2 - 70, 200);
 			// top line
 			g.drawLine(200, 150, 380, 150);
@@ -214,13 +283,13 @@ public class GamePanel extends JPanel implements Runnable {
 			g.drawLine(200, 150, 200, 220);
 			// right line
 			g.drawLine(380, 150, 380, 220);
-			//Exit button
+			// Exit button
 			g.drawString("Exit", GAME_WIDTH / 2 - 70, 400);
 			int x1 = 200;// x1
 			int x2 = 350;// y1
 			int y1 = 380;// x2
 			int y2 = 420;// y2
-			//top line
+			// top line
 			g.drawLine(x1, x2, y1, x2);
 			// bottom line
 			g.drawLine(x1, y2, y1, y2);
@@ -228,14 +297,31 @@ public class GamePanel extends JPanel implements Runnable {
 			g.drawLine(x1, x2, x1, y2);
 			// right line
 			g.drawLine(y1, x2, y1, y2);
-		} 
+		} else if (state == State.Win) {
+			gameOver();
+			g.setColor(Color.red);
+			g.setFont(new Font("Ink Free", Font.BOLD, 40));
+			g.drawString("You Win", GAME_WIDTH / 2 - 100, GAME_HEIGHT / 2);
+			// top line
+			g.drawLine(200, 320, 400, 320);
+			// left line
+			g.drawLine(200, 320, 200, 370);
+			// right line
+			g.drawLine(400, 320, 400, 370);
+			// bottom line
+			g.drawLine(200, 370, 400, 370);
+			g.setColor(Color.green);
+			g.drawString("Play again", 210, 355);
+		}
 	}
 
 	public void gameOver() {
 		normalEnemyList.clear();
 		enemyBulletList.clear();
 		ship.arr.clear();
-		
+		bossList.clear();
+		bossBulletList.clear();
+		bossHealthBar = null;
 	}
 
 	// key input

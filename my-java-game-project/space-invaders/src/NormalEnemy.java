@@ -10,7 +10,7 @@ public class NormalEnemy extends Rectangle {
 	
 	NormalEnemy(int x, int y, int WIDTH, int HEIGHT) {
 		super(x,y,WIDTH,HEIGHT);
-		yVelocity = 0.2f;
+		yVelocity = 0.1f;
 		yN = y;
 	}
 	public void move() {
