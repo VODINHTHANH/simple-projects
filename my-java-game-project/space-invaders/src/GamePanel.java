@@ -216,11 +216,10 @@ public class GamePanel extends JPanel implements Runnable {
 				}
 			}
 			// draw boss
-			 normalEnemyList.clear();/////////////////////////////////////////////////for testing
 			for (Boss b : bossList) {
 				b.draw(g);
 			}
-			if(bossHealthBar != null) {
+			if(bossHealthBar != null && normalEnemyList.isEmpty()) {
 				bossHealthBar.draw(g);
 			}
 			// draw enemy bullet
@@ -256,7 +255,7 @@ public class GamePanel extends JPanel implements Runnable {
 				b.draw(g);
 			}
 		} else if (state == State.GameOver) {
-			gameOver();
+			clear();
 			g.setColor(Color.red);
 			g.setFont(new Font("Ink Free", Font.BOLD, 40));
 			g.drawString("Game Over", GAME_WIDTH / 2 - 100, GAME_HEIGHT / 2);
@@ -275,31 +274,13 @@ public class GamePanel extends JPanel implements Runnable {
 			g.setFont(new Font("Ink Free", Font.BOLD, 60));
 			// play button
 			g.drawString("Play", GAME_WIDTH / 2 - 70, 200);
-			// top line
-			g.drawLine(200, 150, 380, 150);
-			// bottom line
-			g.drawLine(200, 220, 380, 220);
-			// left line
-			g.drawLine(200, 150, 200, 220);
-			// right line
-			g.drawLine(380, 150, 380, 220);
+			g.drawRect(200, 150, 180, 70);
 			// Exit button
 			g.drawString("Exit", GAME_WIDTH / 2 - 70, 400);
-			int x1 = 200;// x1
-			int x2 = 350;// y1
-			int y1 = 380;// x2
-			int y2 = 420;// y2
-			// top line
-			g.drawLine(x1, x2, y1, x2);
-			// bottom line
-			g.drawLine(x1, y2, y1, y2);
-			// left line
-			g.drawLine(x1, x2, x1, y2);
-			// right line
-			g.drawLine(y1, x2, y1, y2);
+			g.drawRect(200, 350, 180, 70);
 		} else if (state == State.Win) {
-			gameOver();
-			g.setColor(Color.red);
+			clear();
+			g.setColor(Color.green);
 			g.setFont(new Font("Ink Free", Font.BOLD, 40));
 			g.drawString("You Win", GAME_WIDTH / 2 - 100, GAME_HEIGHT / 2);
 			// top line
@@ -315,7 +296,7 @@ public class GamePanel extends JPanel implements Runnable {
 		}
 	}
 
-	public void gameOver() {
+	public void clear() {
 		normalEnemyList.clear();
 		enemyBulletList.clear();
 		ship.arr.clear();
