@@ -1,1 +1,1 @@
-# Source code from Youtube
+# Really simple project for learning
